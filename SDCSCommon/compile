@@ -1,0 +1,2 @@
+rm -f SDCSCommon.dll
+gmcs -target:library AssemblyInfo.cs CryptoFunctions.cs Network.cs -out:SDCSCommon.dll

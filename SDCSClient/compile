@@ -1,0 +1,7 @@
+rm -f ./SDCSCommon.dll
+cd ../SDCSCommon
+./compile
+cd ../SDCSClient
+cp ../SDCSCommon/SDCSCommon.dll ./
+rm -f ./Client.exe
+gmcs AssemblyInfo.cs ClientNetwork.cs frmClient.cs -resource:frmClient.resx frmConnectToServer.cs -resource:frmConnectToServer.resx -out:Client.exe -r:./SDCSCommon.dll -r:System -r:System.Windows.Forms -r:System.Drawing -r:System.Data
