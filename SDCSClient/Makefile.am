@@ -1,8 +1,8 @@
 CLEANFILES = SDCSClient.exe
 
-SDCSClient_sources = AssemblyInfo.cs ClientNetwork.cs frmClient.cs frmConnectToServer.cs
+SDCSClient_sources = AssemblyInfo.cs ClientNetwork.cs frmClient.cs frmConnectToServer.cs MainList.cs
 
-resources = App.ico frmClient.resx frmConnectToServer.resx
+resources = App.ico frmClient.resx frmConnectToServer.resx MainList.resx
 
 refs = System.Windows.Forms System.Data System.Drawing
 

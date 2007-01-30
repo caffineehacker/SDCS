@@ -20,6 +20,9 @@ namespace Client
 		public static NetworkStream connectionStream = null;
 		public static int bufferSize = 0;
 
+		public static string IPAddress = "sdcscvs.getmyip.com";
+		public static int Port = 3000;
+
 		/// <summary>
 		/// UserID received from the server
 		/// </summary>
@@ -46,7 +49,7 @@ namespace Client
 		/// <param name="IPAddress">IP address of the server</param>
 		/// <param name="port">Port number on the server to connect to</param>
 		/// <returns>True if connection is successful, false otherwise</returns>
-		public static bool connectToHost(string IPAddress, int port)
+		public static bool connectToHost()
 		{
 			try
 			{
@@ -58,7 +61,7 @@ namespace Client
 
 			try
 			{
-				TcpClient client = new TcpClient(IPAddress, port);
+				TcpClient client = new TcpClient(IPAddress, Port);
 				connectionStream = client.GetStream();
 				bufferSize = client.ReceiveBufferSize;
 				connected = true;
@@ -96,17 +99,40 @@ namespace Client
 			return false;
 		}
 
+		public static void Disconect()
+		{
+			try
+			{
+				listeningThread.Abort();
+			}
+			catch
+			{}
+			try
+			{
+				connectionStream.Close();
+			}
+			catch
+			{}
+			connected = false;
+		}
+
 		private static void listeningFunc()
 		{
 			while (true)
 			{
 				while (connectionStream.DataAvailable != true)
-				{Thread.Sleep(0);}
+				{Thread.Sleep(0);
+					if (connected = false)
+						return;
+				}
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
 				for (int i = 0; i < Network.HEADER_SIZE; i++)
 				{
 					while (connectionStream.DataAvailable != true)
-					{Thread.Sleep(0);}
+					{Thread.Sleep(0);
+						if (connected = false)
+							return;
+					}
 					headerBuffer[i] = (byte)connectionStream.ReadByte();
 				}
 
@@ -116,7 +142,10 @@ namespace Client
 				for (int i = 0; i < head.Length; i++)
 				{
 					while (connectionStream.DataAvailable != true)
-					{Thread.Sleep(0);}
+					{Thread.Sleep(0);
+						if (connected = false)
+							return;
+					}
 					data[i] = (byte)connectionStream.ReadByte();
 				}
 

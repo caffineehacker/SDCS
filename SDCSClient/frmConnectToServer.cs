@@ -31,6 +31,8 @@ namespace Client
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
+			txtIP.Text = ClientNetwork.IPAddress;
+			numPort.Value = ClientNetwork.Port;
 		}
 
 		/// <summary>
@@ -140,7 +142,13 @@ namespace Client
 
 		private void btnConnect_Click(object sender, System.EventArgs e)
 		{
-			ClientNetwork.connectToHost(txtIP.Text, (int)numPort.Value);
+			ClientNetwork.IPAddress = txtIP.Text;
+			ClientNetwork.Port = (int)numPort.Value;
+			if (!(ClientNetwork.connectToHost() && ClientNetwork.logInToServer(txtUsername.Text, txtPassword.Text)))
+			{
+				ClientNetwork.Disconect();
+				ClientNetwork.Connected = false;
+			}
 			this.Dispose();
 		}
 	}

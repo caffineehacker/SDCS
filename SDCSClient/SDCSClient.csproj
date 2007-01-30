@@ -135,7 +135,7 @@
                 <File
                     RelPath = "MainList.cs"
                     SubType = "Form"
-                    BuildAction = "None"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "MainList.resx"

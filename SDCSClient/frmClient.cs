@@ -203,20 +203,26 @@ namespace Client
 
 		private void btnSend_Click(object sender, System.EventArgs e)
 		{
-			Network.Header head = new Network.Header();
-			head.FromID = ClientNetwork.userID;
-			head.ToID = (int)numUser.Value;
-			head.DataType = Network.DataTypes.InstantMessage;
+			if (ClientNetwork.Connected == true)
+			{
+				Network.Header head = new Network.Header();
+				head.FromID = ClientNetwork.userID;
+				head.ToID = (int)numUser.Value;
+				head.DataType = Network.DataTypes.InstantMessage;
 			
-			byte[] data = System.Text.UnicodeEncoding.Unicode.GetBytes(txtInput.Text);
-			head.Length = data.Length;
-			System.Collections.ArrayList sendAL = new ArrayList();
-			sendAL.AddRange(Network.headerToBytes(head));
-			sendAL.AddRange(data);
-			byte[] sendBuffer = (byte[])sendAL.ToArray(typeof(byte));
-			txtHistory.Text += ClientNetwork.userID.ToString() + ": " + txtInput.Text + "\r\n";
-			txtInput.Text = "";
-			ClientNetwork.connectionStream.Write(sendBuffer, 0, sendBuffer.Length);
+				byte[] data = System.Text.UnicodeEncoding.Unicode.GetBytes(txtInput.Text);
+				head.Length = data.Length;
+				System.Collections.ArrayList sendAL = new ArrayList();
+				sendAL.AddRange(Network.headerToBytes(head));
+				sendAL.AddRange(data);
+				byte[] sendBuffer = (byte[])sendAL.ToArray(typeof(byte));
+				txtHistory.Text += ClientNetwork.userID.ToString() + ": " + txtInput.Text + "\r\n";
+				txtInput.Text = "";
+				ClientNetwork.connectionStream.Write(sendBuffer, 0, sendBuffer.Length);
+			}
+			else
+			{
+			}
 		}
 	}
 }

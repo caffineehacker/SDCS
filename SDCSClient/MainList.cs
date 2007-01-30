@@ -107,11 +107,11 @@ namespace BuddyList
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		[STAThread]
+		/*[STAThread]
 		static void Main() 
 		{
 			Application.Run(new MainList());
-		}
+		}*/
 
 		private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
