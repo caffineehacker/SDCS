@@ -1,0 +1,2 @@
+SUBDIRS = SDCSCommon SDCSClient SDCSServer
+
