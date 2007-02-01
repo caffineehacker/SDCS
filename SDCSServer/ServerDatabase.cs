@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 16:19:41  tim
+ * Revision 1.3  2007/02/01 16:30:14  tim
+ * Cleaned up some database code
+ *
+ * Revision 1.2  2007-02-01 16:19:41  tim
  * Added code for storing the user's data and adding a new user from the server program.
  *
  * Revision 1.1  2007-02-01 14:05:15  tim
@@ -20,6 +23,9 @@ namespace Server
 		private static UserDatabase database = new UserDatabase();
 		public static bool DatabaseLoaded = false;
 
+		/// <summary>
+		/// Timer to save the database periodically
+		/// </summary>
 		private static Timer saveTimer = new Timer();
 
 		public ServerDatabase()
@@ -63,6 +69,9 @@ namespace Server
 			return true;
 		}
 
+		/// <summary>
+		/// Saves the database to disk
+		/// </summary>
 		public static void saveDatabase()
 		{
 			database.AcceptChanges();
@@ -77,9 +86,9 @@ namespace Server
 		/// <summary>
 		/// Adds a new user. Make sure you have loaded the database before trying to add a user.
 		/// </summary>
-		/// <param name="userName"></param>
-		/// <param name="password"></param>
-		/// <returns></returns>
+		/// <param name="userName">The user name that you are adding</param>
+		/// <param name="password">The password of the user you are adding</param>
+		/// <returns>Returns true if the user was successfully added. Returns false otherwise.</returns>
 		public static bool addUser(string userName, string password)
 		{
 			if (DatabaseLoaded == false)
@@ -98,6 +107,7 @@ namespace Server
 			}
 			catch
 			{
+				database.RejectChanges();
 				return false;
 			}
 			database.AcceptChanges();
