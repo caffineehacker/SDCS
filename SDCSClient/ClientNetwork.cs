@@ -1,3 +1,10 @@
+/* $Id$
+ * $Log$
+ * Revision 1.3  2007/02/01 12:00:55  tim
+ * Added CVS keywords
+ *
+ */
+
 using System;
 using System.Text;
 using System.Net.Sockets;
