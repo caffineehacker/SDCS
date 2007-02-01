@@ -1,4 +1,4 @@
-CLEANFILES = SDCSServer.exe SDCSCommon.dll
+CLEANFILES = SDCSServer.exe SDCSCommon.dll UserDatabase.cs
 
 SDCSServer_sources = AssemblyInfo.cs ConnectionWatcher.cs frmServer.cs ServerNetwork.cs UserDatabase.cs
 
@@ -16,5 +16,8 @@ SDCSServer.exe: $(SDCSServer_sources) $(resources) SDCSCommon.dll
 
 SDCSCommon.dll:
 	cd ../SDCSCommon && make && cp SDCSCommon.dll ../SDCSServer
+
+UserDatabase.cs: UserDatabase.xsd
+	xsd UserDatabase.xsd /dataset /namespace:Server
 
 all: SDCSServer.exe
