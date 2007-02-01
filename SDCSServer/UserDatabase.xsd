@@ -18,7 +18,12 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="UserID" type="xs:int" minOccurs="0" />
-							<xs:element name="Username" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="UserData">
+					<xs:complexType>
+						<xs:sequence>
 							<xs:element name="First_x0020_Name" type="xs:string" minOccurs="0" />
 							<xs:element name="Last_x0020_Name" type="xs:string" minOccurs="0" />
 							<xs:element name="Address1" type="xs:string" minOccurs="0" />
@@ -30,6 +35,8 @@
 							<xs:element name="Phone" type="xs:string" minOccurs="0" />
 							<xs:element name="Mobile_x0020_Phone" type="xs:string" minOccurs="0" />
 							<xs:element name="Password" type="xs:string" minOccurs="0" />
+							<xs:element name="UserID" type="xs:int" minOccurs="0" />
+							<xs:element name="Username" type="xs:string" minOccurs="0" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -43,6 +50,15 @@
 		<xs:key name="UserIDKey" msdata:PrimaryKey="true">
 			<xs:selector xpath=".//mstns:Users" />
 			<xs:field xpath="mstns:UserID" />
+		</xs:key>
+		<xs:keyref name="UsersUserData" refer="UserIDKey" msdata:AcceptRejectRule="Cascade" msdata:DeleteRule="Cascade"
+			msdata:UpdateRule="Cascade">
+			<xs:selector xpath=".//mstns:UserData" />
+			<xs:field xpath="mstns:UserID" />
+		</xs:keyref>
+		<xs:key name="UserDataKey" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//mstns:UserData" />
+			<xs:field xpath="mstns:Username" />
 		</xs:key>
 	</xs:element>
 </xs:schema>

@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.1  2007/02/01 14:05:15  tim
+ * Revision 1.2  2007/02/01 16:19:41  tim
+ * Added code for storing the user's data and adding a new user from the server program.
+ *
+ * Revision 1.1  2007-02-01 14:05:15  tim
  * Started adding some database code for the server to keep track of users
  *
  */
@@ -37,6 +40,13 @@ namespace Server
 			database = new UserDatabase();
 			try
 			{
+				// Some last minute configuring that can't be done in the designer
+				database.Users.UserIDColumn.AutoIncrement = true;
+				database.Users.UserIDColumn.AllowDBNull = false;
+				database.Users.UserIDColumn.Unique = true;
+				database.UserData.UsernameColumn.Unique = true;
+				database.Users.UserIDColumn.AllowDBNull = false;
+
 				database.ReadXml("userDatabase.xml");
 				saveTimer.AutoReset = true;
 				saveTimer.Interval = 600000;
@@ -45,9 +55,11 @@ namespace Server
 			}
 			catch
 			{
+				DatabaseLoaded = false;
 				return false;
 			}
 
+			DatabaseLoaded = true;
 			return true;
 		}
 
@@ -60,6 +72,36 @@ namespace Server
 		private static void saveTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			saveDatabase();
+		}
+
+		/// <summary>
+		/// Adds a new user. Make sure you have loaded the database before trying to add a user.
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
+		public static bool addUser(string userName, string password)
+		{
+			if (DatabaseLoaded == false)
+				return false;
+
+			database.AcceptChanges();
+			try
+			{
+				UserDatabase.UsersRow newUserRow = database.Users.NewUsersRow();
+				database.Users.AddUsersRow(newUserRow);
+				UserDatabase.UserDataRow newUserDataRow = database.UserData.NewUserDataRow();
+				newUserDataRow.Password = SDCSCommon.CryptoFunctions.getMD5Hash(password);
+				newUserDataRow.Username = userName;
+				newUserDataRow.UserID = newUserRow.UserID;
+				database.UserData.AddUserDataRow(newUserDataRow);
+			}
+			catch
+			{
+				return false;
+			}
+			database.AcceptChanges();
+			return true;
 		}
 	}
 }

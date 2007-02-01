@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 12:00:55  tim
+ * Revision 1.3  2007/02/01 16:19:41  tim
+ * Added code for storing the user's data and adding a new user from the server program.
+ *
+ * Revision 1.2  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -9,7 +12,7 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace SDCS
+namespace SDCSCommon
 {
 	/// <summary>
 	/// Summary description for MD5.

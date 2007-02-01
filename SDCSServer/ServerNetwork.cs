@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 12:00:55  tim
+ * Revision 1.3  2007/02/01 16:19:41  tim
+ * Added code for storing the user's data and adding a new user from the server program.
+ *
+ * Revision 1.2  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -44,6 +47,11 @@ namespace Server
 		public static Thread listeningThread = new Thread(new ThreadStart(listeningThreadFunc));
 
 		/// <summary>
+		/// Set to true when shutting down the server
+		/// </summary>
+		public static bool ShuttingDown = false;
+
+		/// <summary>
 		/// Constructor for ServerNetwork
 		/// </summary>
 		public ServerNetwork()
@@ -55,7 +63,12 @@ namespace Server
 		/// </summary>
 		public static void startListening()
 		{
-			listeningThread.Start();
+			try
+			{
+				listeningThread.Start();
+			}
+			catch
+			{}
 		}
 
 		/// <summary>
@@ -75,7 +88,7 @@ namespace Server
 			while(true)
 			{
 				while (listener.Pending() == false)
-				{if (frmServer.ShuttingDown)
+				{if (ShuttingDown)
 					  return;
 					 Thread.Sleep(100);}
 				TcpClient client = listener.AcceptTcpClient();
