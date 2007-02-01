@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 17:56:43  tim
+ * Revision 1.5  2007/02/01 18:13:55  tim
+ * Final touches on password authentication and fixing a server crash bug
+ *
+ * Revision 1.4  2007-02-01 17:56:43  tim
  * Reworked the login system to use usernames and passwords
  *
  * Revision 1.3  2007-02-01 17:18:43  tim
@@ -84,7 +87,7 @@ namespace Server
 			while (true)
 			{
 				while (conn.stream.DataAvailable == false)
-				{if (frmServer.ShuttingDown)
+				{if (ServerNetwork.ShuttingDown)
 					 return;
 					Thread.Sleep(100);}
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];

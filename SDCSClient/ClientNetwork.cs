@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/01 17:56:43  tim
+ * Revision 1.7  2007/02/01 18:13:55  tim
+ * Final touches on password authentication and fixing a server crash bug
+ *
+ * Revision 1.6  2007-02-01 17:56:43  tim
  * Reworked the login system to use usernames and passwords
  *
  * Revision 1.5  2007-02-01 17:18:43  tim
@@ -117,7 +120,7 @@ namespace Client
 			}
 
 			// Create secure password
-			password = SDCSCommon.CryptoFunctions.getMD5Hash(String.Concat(password, randomCodeData));
+			password = SDCSCommon.CryptoFunctions.getMD5Hash(String.Concat(SDCSCommon.CryptoFunctions.getMD5Hash(password), randomCodeData));
 			Network.Header sendHead = new Network.Header();
 			sendHead.DataType = Network.DataTypes.LoginInformation;
 			sendHead.FromID = 0;
