@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/01 12:00:55  tim
+ * Revision 1.4  2007/02/01 14:53:02  tim
+ * Fixed a little bug where I used "=" instead of "=="
+ *
+ * Revision 1.3  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -129,7 +132,7 @@ namespace Client
 			{
 				while (connectionStream.DataAvailable != true)
 				{Thread.Sleep(0);
-					if (connected = false)
+					if (connected == false)
 						return;
 				}
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
@@ -137,7 +140,7 @@ namespace Client
 				{
 					while (connectionStream.DataAvailable != true)
 					{Thread.Sleep(0);
-						if (connected = false)
+						if (connected == false)
 							return;
 					}
 					headerBuffer[i] = (byte)connectionStream.ReadByte();
@@ -150,7 +153,7 @@ namespace Client
 				{
 					while (connectionStream.DataAvailable != true)
 					{Thread.Sleep(0);
-						if (connected = false)
+						if (connected == false)
 							return;
 					}
 					data[i] = (byte)connectionStream.ReadByte();
