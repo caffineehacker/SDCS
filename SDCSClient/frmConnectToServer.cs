@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/01 12:00:55  tim
+ * Revision 1.4  2007/02/01 17:18:43  tim
+ * Changed the login process to use usernames and passwords
+ *
+ * Revision 1.3  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -151,7 +154,7 @@ namespace Client
 		{
 			ClientNetwork.IPAddress = txtIP.Text;
 			ClientNetwork.Port = (int)numPort.Value;
-			if (!(ClientNetwork.connectToHost() && ClientNetwork.logInToServer(txtUsername.Text, txtPassword.Text)))
+			if (!(ClientNetwork.logInToServer(txtUsername.Text, txtPassword.Text)))
 			{
 				ClientNetwork.Disconect();
 				ClientNetwork.Connected = false;

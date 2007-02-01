@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 12:00:55  tim
+ * Revision 1.3  2007/02/01 17:18:43  tim
+ * Changed the login process to use usernames and passwords
+ *
+ * Revision 1.2  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -20,6 +23,15 @@ namespace SDCSCommon
 		/// This is the header size for transmissions in bytes
 		/// </summary>
 		public const int HEADER_SIZE = 20;
+		
+		/// <summary>
+		/// Sent by the server when login information checks out
+		/// </summary>
+		public const int LoginOK = 0;
+		/// <summary>
+		/// Sent by the server when login information is bad
+		/// </summary>
+		public const int LoginBad = 1;
 
 		/// <summary>
 		/// This is the structure for the header
@@ -60,15 +72,15 @@ namespace SDCSCommon
 			/// <summary>
 			/// For assigning a client a user ID. Is this necessary?
 			/// </summary>
-			UserIDAssignment,
-			/// <summary>
-			/// For sending a random code that is to be combined with a users password for logging in securely
-			/// </summary>
 			RandomPassCode,
 			/// <summary>
 			/// Sent from the client with the Username and double hashed password
 			/// </summary>
 			LoginInformation,
+			/// <summary>
+			/// Sent from the server to notify the client if the login was successful or not
+			/// </summary>
+			LoginStatus,
 			/// <summary>
 			/// Sent from the server with updated information on buddy states
 			/// </summary>
@@ -108,6 +120,38 @@ namespace SDCSCommon
 			temp.Length = System.BitConverter.ToInt64(bytes, 12);
 
 			return temp;
+		}
+
+		/// <summary>
+		/// Converts login information in the form of a username and password to a format to be sent across the network
+		/// </summary>
+		/// <param name="username">The username to convert</param>
+		/// <param name="password">The double hashed password to convert</param>
+		/// <returns>The bytes to be sent</returns>
+		public static byte[] loginInformationToData(string username, string password)
+		{
+			ArrayList data = new ArrayList();
+			byte[] usernameBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(username);
+			data.AddRange(System.BitConverter.GetBytes(usernameBytes.Length));
+			data.AddRange(usernameBytes);
+			data.AddRange(System.Text.UnicodeEncoding.Unicode.GetBytes(password));
+
+			return (byte[])data.ToArray(typeof(byte));
+		}
+
+		/// <summary>
+		/// Converts the byte array received as data for logging in to the username and hashed password format
+		/// </summary>
+		/// <param name="data">The data received to be converted</param>
+		/// <returns>An array with [0] being the username and [1] being the hashed password</returns>
+		public static string[] dataToLoginInformation(byte[] data)
+		{
+			int usernameLength = System.BitConverter.ToInt32(data, 0);
+			string[] returnVal = new string[2];
+			returnVal[0] = System.Text.UnicodeEncoding.Unicode.GetString(data, 4, usernameLength);
+			returnVal[1] = System.Text.UnicodeEncoding.Unicode.GetString(data, 4 + usernameLength, data.Length - (4 + usernameLength));
+
+			return returnVal;
 		}
 	}
 }

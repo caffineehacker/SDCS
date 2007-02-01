@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/01 12:00:55  tim
+ * Revision 1.4  2007/02/01 17:18:43  tim
+ * Changed the login process to use usernames and passwords
+ *
+ * Revision 1.3  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -190,7 +193,6 @@ namespace Client
 		{
 			frmConnectToServer frm = new frmConnectToServer();
 			frm.ShowDialog();
-			MessageBox.Show("Your User ID is now: " + ClientNetwork.userID);
 		}
 
 		public void DataReceivedHandler(object o, DataReceivedEventArgs e)
@@ -202,9 +204,6 @@ namespace Client
 					break;
 				case Network.DataTypes.WhiteBoard:
 					break;
-				case Network.DataTypes.UserIDAssignment:
-					System.Windows.Forms.MessageBox.Show("Your user ID number is " + ClientNetwork.userID.ToString());
-					break;
 			}
 		}
 
@@ -213,7 +212,7 @@ namespace Client
 			if (ClientNetwork.Connected == true)
 			{
 				Network.Header head = new Network.Header();
-				head.FromID = ClientNetwork.userID;
+				head.FromID = 0;
 				head.ToID = (int)numUser.Value;
 				head.DataType = Network.DataTypes.InstantMessage;
 			
@@ -223,7 +222,7 @@ namespace Client
 				sendAL.AddRange(Network.headerToBytes(head));
 				sendAL.AddRange(data);
 				byte[] sendBuffer = (byte[])sendAL.ToArray(typeof(byte));
-				txtHistory.Text += ClientNetwork.userID.ToString() + ": " + txtInput.Text + "\r\n";
+				txtHistory.Text += ClientNetwork.Username + ": " + txtInput.Text + "\r\n";
 				txtInput.Text = "";
 				ClientNetwork.connectionStream.Write(sendBuffer, 0, sendBuffer.Length);
 			}

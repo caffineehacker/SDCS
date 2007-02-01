@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 14:53:02  tim
+ * Revision 1.5  2007/02/01 17:18:43  tim
+ * Changed the login process to use usernames and passwords
+ *
+ * Revision 1.4  2007-02-01 14:53:02  tim
  * Fixed a little bug where I used "=" instead of "=="
  *
  * Revision 1.3  2007-02-01 12:00:55  tim
@@ -33,10 +36,7 @@ namespace Client
 		public static string IPAddress = "sdcscvs.getmyip.com";
 		public static int Port = 3000;
 
-		/// <summary>
-		/// UserID received from the server
-		/// </summary>
-		public static int userID;
+		public static string Username = "";
 
 		public static Thread listeningThread = new Thread(new ThreadStart(listeningFunc));
 
@@ -54,12 +54,12 @@ namespace Client
 		}
 
 		/// <summary>
-		/// Connects to the server
+		/// Connects to the server and then logs you in
 		/// </summary>
-		/// <param name="IPAddress">IP address of the server</param>
-		/// <param name="port">Port number on the server to connect to</param>
-		/// <returns>True if connection is successful, false otherwise</returns>
-		public static bool connectToHost()
+		/// <param name="userName">The user's username</param>
+		/// <param name="password">The user's password</param>
+		/// <returns>True if the login is successful, false otherwise</returns>
+		public static bool logInToServer(string userName, string password)
 		{
 			try
 			{
@@ -69,7 +69,10 @@ namespace Client
 			{
 			}
 
-			try
+			Network.Header head;
+			string randomCodeData = "";
+
+			try // Connect to the server
 			{
 				TcpClient client = new TcpClient(IPAddress, Port);
 				connectionStream = client.GetStream();
@@ -80,15 +83,21 @@ namespace Client
 				for (int i = 0; i < Network.HEADER_SIZE; i++)
 				{
 					while (connectionStream.DataAvailable == false)
-					{}
+					{} // ToDo: Add escape code
 					header[i] = (byte)connectionStream.ReadByte();
 				}
 
-				Network.Header head = Network.bytesToHeader(header);
-				userID = head.ToID;
+				head = Network.bytesToHeader(header);
 
-				listeningThread.Start();
-				return true;
+				byte[] randomCode = new byte[head.Length]; // Download the random pass code for security
+				for (int i = 0; i < head.Length; i++)
+				{
+					while (connectionStream.DataAvailable == false)
+					{} // ToDo: Add escape code
+					randomCode[i] = (byte)connectionStream.ReadByte();
+				}
+
+				randomCodeData = System.Text.UnicodeEncoding.Unicode.GetString(randomCode, 0, (int)head.Length);
 			}
 			catch
 			{
@@ -96,17 +105,58 @@ namespace Client
 				connected = false;
 				return false;
 			}
-		}
 
-		/// <summary>
-		/// Logs in to the server after you have connected using connectToServer(...)
-		/// </summary>
-		/// <param name="userName">The user's username</param>
-		/// <param name="password">The user's password</param>
-		/// <returns>True if the login is successful, false otherwise</returns>
-		public static bool logInToServer(string userName, string password)
-		{
-			return false;
+			if (head.DataType != Network.DataTypes.RandomPassCode) // Wrong type for first packet
+			{
+				System.Windows.Forms.MessageBox.Show("Illegal data received from host");
+				connected = false;
+				return false;
+			}
+
+			// Create secure password
+			password = SDCSCommon.CryptoFunctions.getMD5Hash(String.Concat(password, randomCodeData));
+			Network.Header sendHead = new Network.Header();
+			sendHead.DataType = Network.DataTypes.LoginInformation;
+			sendHead.FromID = 0;
+			sendHead.ToID = -1;
+			sendHead.Length = 0;
+
+			connectionStream.Write(SDCSCommon.Network.headerToBytes(sendHead), 0, SDCSCommon.Network.HEADER_SIZE);
+			byte[] passBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(password);
+			connectionStream.Write(passBytes,0,passBytes.Length);
+
+			byte[] statusHeader = new byte[Network.HEADER_SIZE];
+			for (int i = 0; i < Network.HEADER_SIZE; i++)
+			{
+				while (connectionStream.DataAvailable == false)
+				{} // ToDo: Add escape code
+				statusHeader[i] = (byte)connectionStream.ReadByte();
+			}
+
+			Network.Header statusHead = Network.bytesToHeader(statusHeader);
+
+			byte[] statusCode = new byte[statusHead.Length]; // Download the random pass code for security
+			for (int i = 0; i < statusHead.Length; i++)
+			{
+				while (connectionStream.DataAvailable == false)
+				{} // ToDo: Add escape code
+				statusCode[i] = (byte)connectionStream.ReadByte();
+			}
+
+			if (!(statusHead.DataType == Network.DataTypes.LoginStatus && BitConverter.ToInt32(statusCode, 0) == Network.LoginOK))
+			{
+				connected = false;
+				try
+				{
+					connectionStream.Close();
+				}
+				catch
+				{}
+				return false;
+			}
+			
+			listeningThread.Start();
+			return true;
 		}
 
 		public static void Disconect()

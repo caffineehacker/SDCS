@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 12:00:55  tim
+ * Revision 1.3  2007/02/01 17:18:43  tim
+ * Changed the login process to use usernames and passwords
+ *
+ * Revision 1.2  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -40,13 +43,6 @@ namespace Server
 		public ConnectionWatcher(ServerNetwork.connection con)
 		{
 			conn = con;
-
-			Network.Header idHeader = new Network.Header();
-			idHeader.DataType = Network.DataTypes.UserIDAssignment;
-			idHeader.FromID = -1;
-			idHeader.ToID = conn.userID;
-			idHeader.Length = 0; // The user program gets their ID from this header's FromID field
-			sendData(Network.headerToBytes(idHeader));
 
 			watchingThread = new Thread(new ThreadStart(connectionWatcherFunc));
 			watchingThread.Start();
@@ -103,8 +99,6 @@ namespace Server
 								((ServerNetwork.connection)ServerNetwork.netStreams[i]).stream.Write((byte[])outgoing.ToArray(typeof(byte)), 0, outgoing.Count);
 							}
 						}
-						break;
-					case Network.DataTypes.UserIDAssignment:
 						break;
 					case Network.DataTypes.WhiteBoard:
 						break;
