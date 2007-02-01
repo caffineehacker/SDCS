@@ -123,9 +123,33 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "ServerDatabase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ServerNetwork.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UserDatabase.xsd"
+                    BuildAction = "Content"
+                    Generator = "MSDataSetGenerator"
+                    LastGenOutput = "UserDatabase.cs"
+                />
+                <File
+                    RelPath = "UserDatabase.cs"
+                    DependentUpon = "UserDatabase.xsd"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                    DesignTime = "True"
+                    AutoGen = "True"
+                />
+                <File
+                    RelPath = "UserDatabase.xsx"
+                    DependentUpon = "UserDatabase.xsd"
+                    BuildAction = "None"
                 />
             </Include>
         </Files>

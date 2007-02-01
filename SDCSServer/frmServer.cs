@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 12:00:55  tim
+ * Revision 1.3  2007/02/01 14:05:15  tim
+ * Started adding some database code for the server to keep track of users
+ *
+ * Revision 1.2  2007-02-01 12:00:55  tim
  * Added CVS keywords
  *
  */
@@ -25,6 +28,7 @@ namespace Server
 		/// Required designer variable
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+		private Server.UserDatabase userDatabase;
 
 		/// <summary>
 		/// Threads check this and when it is true they exit
@@ -85,7 +89,9 @@ namespace Server
 		{
 			this.btnListen = new System.Windows.Forms.Button();
 			this.numPort = new System.Windows.Forms.NumericUpDown();
+			this.userDatabase = new Server.UserDatabase();
 			((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.userDatabase)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnListen
@@ -113,6 +119,11 @@ namespace Server
 																  0,
 																  0});
 			// 
+			// userDatabase
+			// 
+			this.userDatabase.DataSetName = "UserDatabase";
+			this.userDatabase.Locale = new System.Globalization.CultureInfo("en-US");
+			// 
 			// frmServer
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -122,6 +133,7 @@ namespace Server
 			this.Name = "frmServer";
 			this.Text = "Form1";
 			((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.userDatabase)).EndInit();
 			this.ResumeLayout(false);
 
 		}

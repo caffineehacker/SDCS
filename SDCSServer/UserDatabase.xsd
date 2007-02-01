@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="UserDatabase" targetNamespace="http://tempuri.org/UserDatabase.xsd" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns="http://tempuri.org/UserDatabase.xsd" xmlns:mstns="http://tempuri.org/UserDatabase.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="UserDatabase" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Buddy_x0020_List">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="UserID" type="xs:int" minOccurs="0" />
+							<xs:element name="Friend" type="xs:int" minOccurs="0" />
+							<xs:element name="Group" type="xs:int" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Users">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="UserID" type="xs:int" minOccurs="0" />
+							<xs:element name="Username" type="xs:string" minOccurs="0" />
+							<xs:element name="First_x0020_Name" type="xs:string" minOccurs="0" />
+							<xs:element name="Last_x0020_Name" type="xs:string" minOccurs="0" />
+							<xs:element name="Address1" type="xs:string" minOccurs="0" />
+							<xs:element name="Address2" type="xs:string" minOccurs="0" />
+							<xs:element name="City" type="xs:string" minOccurs="0" />
+							<xs:element name="State" type="xs:string" minOccurs="0" />
+							<xs:element name="Zip_x0020_Code" type="xs:string" minOccurs="0" />
+							<xs:element name="Web_x0020_Site" type="xs:string" minOccurs="0" />
+							<xs:element name="Phone" type="xs:string" minOccurs="0" />
+							<xs:element name="Mobile_x0020_Phone" type="xs:string" minOccurs="0" />
+							<xs:element name="Password" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:keyref name="UsersBuddy_x005F_x0020_List" refer="UserIDKey" msdata:AcceptRejectRule="Cascade"
+			msdata:DeleteRule="Cascade" msdata:UpdateRule="Cascade">
+			<xs:selector xpath=".//mstns:Buddy_x0020_List" />
+			<xs:field xpath="mstns:UserID" />
+		</xs:keyref>
+		<xs:key name="UserIDKey" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//mstns:Users" />
+			<xs:field xpath="mstns:UserID" />
+		</xs:key>
+	</xs:element>
+</xs:schema>
