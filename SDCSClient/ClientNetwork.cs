@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/01 17:18:43  tim
+ * Revision 1.6  2007/02/01 17:56:43  tim
+ * Reworked the login system to use usernames and passwords
+ *
+ * Revision 1.5  2007-02-01 17:18:43  tim
  * Changed the login process to use usernames and passwords
  *
  * Revision 1.4  2007-02-01 14:53:02  tim
@@ -59,7 +62,7 @@ namespace Client
 		/// <param name="userName">The user's username</param>
 		/// <param name="password">The user's password</param>
 		/// <returns>True if the login is successful, false otherwise</returns>
-		public static bool logInToServer(string userName, string password)
+		public static bool logInToServer(string username, string password)
 		{
 			try
 			{
@@ -119,10 +122,14 @@ namespace Client
 			sendHead.DataType = Network.DataTypes.LoginInformation;
 			sendHead.FromID = 0;
 			sendHead.ToID = -1;
-			sendHead.Length = 0;
+
+			byte[] passBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(password);
+			byte[] usernameBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(username);
+			sendHead.Length = passBytes.Length + usernameBytes.Length + 4;
 
 			connectionStream.Write(SDCSCommon.Network.headerToBytes(sendHead), 0, SDCSCommon.Network.HEADER_SIZE);
-			byte[] passBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(password);
+			connectionStream.Write(BitConverter.GetBytes(usernameBytes.Length), 0, 4);
+			connectionStream.Write(usernameBytes, 0, usernameBytes.Length);
 			connectionStream.Write(passBytes,0,passBytes.Length);
 
 			byte[] statusHeader = new byte[Network.HEADER_SIZE];

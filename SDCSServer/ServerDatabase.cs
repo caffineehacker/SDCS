@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/01 16:30:14  tim
+ * Revision 1.4  2007/02/01 17:56:43  tim
+ * Reworked the login system to use usernames and passwords
+ *
+ * Revision 1.3  2007-02-01 16:30:14  tim
  * Cleaned up some database code
  *
  * Revision 1.2  2007-02-01 16:19:41  tim
@@ -89,7 +92,7 @@ namespace Server
 		/// <param name="userName">The user name that you are adding</param>
 		/// <param name="password">The password of the user you are adding</param>
 		/// <returns>Returns true if the user was successfully added. Returns false otherwise.</returns>
-		public static bool addUser(string userName, string password)
+		public static bool addUser(string username, string password)
 		{
 			if (DatabaseLoaded == false)
 				return false;
@@ -101,7 +104,7 @@ namespace Server
 				database.Users.AddUsersRow(newUserRow);
 				UserDatabase.UserDataRow newUserDataRow = database.UserData.NewUserDataRow();
 				newUserDataRow.Password = SDCSCommon.CryptoFunctions.getMD5Hash(password);
-				newUserDataRow.Username = userName;
+				newUserDataRow.Username = username;
 				newUserDataRow.UserID = newUserRow.UserID;
 				database.UserData.AddUserDataRow(newUserDataRow);
 			}
@@ -112,6 +115,29 @@ namespace Server
 			}
 			database.AcceptChanges();
 			return true;
+		}
+
+		/// <summary>
+		/// Gets the hashed version of a user's password
+		/// </summary>
+		/// <param name="username">The username whom's password you want</param>
+		/// <returns>The user's hashed password</returns>
+		public static string getUserPass(string username)
+		{
+			UserDatabase.UserDataRow userRow = database.UserData.FindByUsername(username);
+			if (userRow == null)
+				return "";
+			else
+				return userRow.Password;
+		}
+
+		public static int getUserID(string username)
+		{
+			UserDatabase.UserDataRow userRow = database.UserData.FindByUsername(username);
+			if (userRow == null)
+				return -1;
+			else
+				return userRow.UserID;
 		}
 	}
 }

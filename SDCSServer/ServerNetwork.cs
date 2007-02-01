@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/01 16:19:41  tim
+ * Revision 1.4  2007/02/01 17:56:43  tim
+ * Reworked the login system to use usernames and passwords
+ *
+ * Revision 1.3  2007-02-01 16:19:41  tim
  * Added code for storing the user's data and adding a new user from the server program.
  *
  * Revision 1.2  2007-02-01 12:00:55  tim
@@ -37,10 +40,6 @@ namespace Server
 		/// </summary>
 		private static int listeningPort = 3000;
 
-		/// <summary>
-		/// Stores the next ID to be assigned to the next user to log in
-		/// </summary>
-		private static int nextUserID = 0;
 		/// <summary>
 		/// The thread responsible for watching for incoming connections
 		/// </summary>
@@ -94,8 +93,7 @@ namespace Server
 				TcpClient client = listener.AcceptTcpClient();
 
 				connection conn = new connection();
-				conn.userID = nextUserID;
-				nextUserID++;
+				conn.userID = 0;
 				conn.stream = client.GetStream();
 				netStreams.Add(conn);
 				conn.watchingClass = new ConnectionWatcher(conn);
