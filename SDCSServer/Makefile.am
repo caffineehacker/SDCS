@@ -1,6 +1,6 @@
 CLEANFILES = SDCSServer.exe SDCSCommon.dll UserDatabase.cs
 
-SDCSServer_sources = AssemblyInfo.cs ConnectionWatcher.cs frmServer.cs ServerNetwork.cs UserDatabase.cs
+SDCSServer_sources = AssemblyInfo.cs ConnectionWatcher.cs frmServer.cs ServerNetwork.cs UserDatabase.cs ServerDatabase.cs
 
 resources = App.ico frmServer.resx
 
