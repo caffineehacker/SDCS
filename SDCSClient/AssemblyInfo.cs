@@ -1,12 +1,15 @@
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
 /* $Id$
  * $Log$
- * Revision 1.2  2007/02/01 11:57:22  tim
+ * Revision 1.3  2007/02/01 12:00:55  tim
  * Added CVS keywords
  *
-*/
+ * Revision 1.2  2007-02-01 11:57:22  tim
+ * Added CVS keywords
+ *
+ */
+
+using System.Reflection;
+using System.Runtime.CompilerServices;
 //
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
