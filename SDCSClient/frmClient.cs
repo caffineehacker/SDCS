@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 17:18:43  tim
+ * Revision 1.5  2007/02/02 02:28:27  tim
+ * Made it so a user can tell if the login was successful
+ *
+ * Revision 1.4  2007-02-01 17:18:43  tim
  * Changed the login process to use usernames and passwords
  *
  * Revision 1.3  2007-02-01 12:00:55  tim
@@ -193,6 +196,10 @@ namespace Client
 		{
 			frmConnectToServer frm = new frmConnectToServer();
 			frm.ShowDialog();
+			if (ClientNetwork.Connected)
+				MessageBox.Show("Successful Login");
+			else
+				MessageBox.Show("Login Failed");
 		}
 
 		public void DataReceivedHandler(object o, DataReceivedEventArgs e)
