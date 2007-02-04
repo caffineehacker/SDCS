@@ -138,6 +138,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "loginForm.resx"
+                    DependentUpon = "loginForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "MainList.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

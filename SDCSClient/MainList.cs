@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/04 20:13:30  scott
+ * Revision 1.6  2007/02/04 20:33:40  tim
+ * Some minor cleanups
+ *
+ * Revision 1.5  2007-02-04 20:13:30  scott
  * Added a nice login window
  *
  * Revision 1.4  2007-02-04 05:28:53  tim
@@ -18,17 +21,17 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 
-namespace BuddyList
+namespace Client
 {
 	/// <summary>
 	/// Summary description for Form1.
 	/// </summary>
 	public class MainList : System.Windows.Forms.Form
 	{
-		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.MainMenu mainMenu1;
-		private System.Windows.Forms.MenuItem menuItem1;
-		private System.Windows.Forms.MenuItem menuItem2;
+		private System.Windows.Forms.ListBox lstBuddyList;
+		private System.Windows.Forms.MenuItem mnuFile;
+		private System.Windows.Forms.MenuItem mnuExit;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -44,11 +47,13 @@ namespace BuddyList
 			//
 			InitializeComponent();
 
-			WindowsApplication1.LoginForm initialLogin = new WindowsApplication1.LoginForm();
-			initialLogin.ShowDialog();
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
+			LoginForm initialLogin = new LoginForm();
+			initialLogin.ShowDialog();
+
+			this.Show();
 		}
 
 		/// <summary>
@@ -73,47 +78,46 @@ namespace BuddyList
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.listBox1 = new System.Windows.Forms.ListBox();
+			this.lstBuddyList = new System.Windows.Forms.ListBox();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
-			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
+			this.mnuFile = new System.Windows.Forms.MenuItem();
+			this.mnuExit = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
-			// listBox1
+			// lstBuddyList
 			// 
-			this.listBox1.Items.AddRange(new object[] {
-														  "This",
-														  "is a",
-														  "test"});
-			this.listBox1.Location = new System.Drawing.Point(8, 16);
-			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(216, 654);
-			this.listBox1.TabIndex = 0;
-			this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+			this.lstBuddyList.Items.AddRange(new object[] {
+															  "This",
+															  "is a",
+															  "test"});
+			this.lstBuddyList.Location = new System.Drawing.Point(8, 16);
+			this.lstBuddyList.Name = "lstBuddyList";
+			this.lstBuddyList.Size = new System.Drawing.Size(216, 654);
+			this.lstBuddyList.TabIndex = 0;
 			// 
 			// mainMenu1
 			// 
 			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItem1});
+																					  this.mnuFile});
 			// 
-			// menuItem1
+			// mnuFile
 			// 
-			this.menuItem1.Index = 0;
-			this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItem2});
-			this.menuItem1.Text = "File";
+			this.mnuFile.Index = 0;
+			this.mnuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					this.mnuExit});
+			this.mnuFile.Text = "&File";
 			// 
-			// menuItem2
+			// mnuExit
 			// 
-			this.menuItem2.Index = 0;
-			this.menuItem2.Text = "Exit";
-			this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+			this.mnuExit.Index = 0;
+			this.mnuExit.Text = "E&xit";
+			this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
 			// 
 			// MainList
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(232, 741);
-			this.Controls.Add(this.listBox1);
+			this.Controls.Add(this.lstBuddyList);
 			this.Menu = this.mainMenu1;
 			this.Name = "MainList";
 			this.Text = "People - SDCS";
@@ -131,12 +135,7 @@ namespace BuddyList
 			Application.Run(new MainList());
 		}
 
-		private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-		
-		}
-
-		private void menuItem2_Click(object sender, System.EventArgs e)
+		private void mnuExit_Click(object sender, System.EventArgs e)
 		{
 			Application.Exit();
 		}

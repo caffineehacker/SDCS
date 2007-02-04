@@ -1,3 +1,10 @@
+/* $Id$
+ * $Log$
+ * Revision 1.3  2007/02/04 20:33:40  tim
+ * Some minor cleanups
+ *
+ */
+
 using System;
 using System.Drawing;
 using System.Collections;
@@ -5,10 +12,10 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 
-namespace WindowsApplication1
+namespace Client
 {
 	/// <summary>
-	/// Summary description for Form1.
+	/// The username and password login screen
 	/// </summary>
 	public class LoginForm : System.Windows.Forms.Form
 	{
