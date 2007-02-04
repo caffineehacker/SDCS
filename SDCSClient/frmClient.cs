@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/04 05:28:53  tim
+ * Revision 1.7  2007/02/04 20:13:30  scott
+ * Added a nice login window
+ *
+ * Revision 1.6  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.5  2007-02-02 02:28:27  tim
@@ -194,11 +197,11 @@ namespace Client
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		[STAThread]
+		/*[STAThread]
 		static void Main() 
 		{
 			Application.Run(new frmClient());
-		}
+		}*/
 
 		private void mnuConnect_Click(object sender, System.EventArgs e)
 		{

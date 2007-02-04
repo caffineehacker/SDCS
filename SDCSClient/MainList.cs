@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/04 05:28:53  tim
+ * Revision 1.5  2007/02/04 20:13:30  scott
+ * Added a nice login window
+ *
+ * Revision 1.4  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.3  2007-02-01 12:00:55  tim
@@ -41,6 +44,8 @@ namespace BuddyList
 			//
 			InitializeComponent();
 
+			WindowsApplication1.LoginForm initialLogin = new WindowsApplication1.LoginForm();
+			initialLogin.ShowDialog();
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
@@ -120,11 +125,11 @@ namespace BuddyList
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		/*[STAThread]
+		[STAThread]
 		static void Main() 
 		{
 			Application.Run(new MainList());
-		}*/
+		}
 
 		private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
