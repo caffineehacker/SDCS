@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/04 04:21:45  tim
+ * Revision 1.7  2007/02/04 04:30:55  tim
+ * More shutdown code changes
+ *
+ * Revision 1.6  2007-02-04 04:21:45  tim
  * Added comments to better explain the code and fixed a spelling mistake in a function name
  *
  * Revision 1.5  2007-02-01 18:13:55  tim
@@ -28,7 +31,7 @@ namespace Server
 	/// </summary>
 	public class ConnectionWatcher
 	{
-		public Thread watchingThread;
+		private Thread watchingThread;
 		private ServerNetwork.connection conn;
 
 		/// <summary>
@@ -46,6 +49,19 @@ namespace Server
 		/// </summary>
 		public ConnectionWatcher()
 		{
+		}
+
+		/// <summary>
+		/// Call when shutting down the server
+		/// </summary>
+		public void Shutdown()
+		{
+			try
+			{
+				watchingThread.Abort();
+			}
+			catch
+			{}
 		}
 
 		public void sendData(byte[] data)
