@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/04 04:30:55  tim
+ * Revision 1.8  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.7  2007-02-04 04:30:55  tim
  * More shutdown code changes
  *
  * Revision 1.6  2007-02-04 04:21:45  tim
@@ -33,10 +36,22 @@ namespace Server
 	/// </summary>
 	public class ServerNetwork
 	{
+		/// <summary>
+		/// Holds all the information about a connection including the communication stream, the class associated with this connection, and the user ID
+		/// </summary>
 		public struct connection
 		{
+			/// <summary>
+			/// The stream connected to the client
+			/// </summary>
 			public NetworkStream stream;
+			/// <summary>
+			/// The class responsible for this connection
+			/// </summary>
 			public ConnectionWatcher watchingClass;
+			/// <summary>
+			/// The user ID of the user logged in on this connection
+			/// </summary>
 			public int userID;
 		}
 

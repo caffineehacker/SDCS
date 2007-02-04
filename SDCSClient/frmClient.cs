@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/02 02:28:27  tim
+ * Revision 1.6  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.5  2007-02-02 02:28:27  tim
  * Made it so a user can tell if the login was successful
  *
  * Revision 1.4  2007-02-01 17:18:43  tim
@@ -42,6 +45,9 @@ namespace Client
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Standard initializer
+		/// </summary>
 		public frmClient()
 		{
 			//
@@ -52,6 +58,8 @@ namespace Client
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
+
+			// Add a handler for the DataReceived event raised by ClientNetwork when data is received from the server
 			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(DataReceivedHandler);
 		}
 
@@ -202,6 +210,11 @@ namespace Client
 				MessageBox.Show("Login Failed");
 		}
 
+		/// <summary>
+		/// Handles the event raised by ClientNetwork when data is received <seealso cref="ClientNetwork.DataReceived"/>
+		/// </summary>
+		/// <param name="o">Always received as null, ignored</param>
+		/// <param name="e">Contains the header and data received from the server by ClientNetwork <seealso cref="DataReceivedEventArgs"/></param>
 		public void DataReceivedHandler(object o, DataReceivedEventArgs e)
 		{
 			switch (e.Header.DataType)

@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 17:56:43  tim
+ * Revision 1.5  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.4  2007-02-01 17:56:43  tim
  * Reworked the login system to use usernames and passwords
  *
  * Revision 1.3  2007-02-01 16:30:14  tim
@@ -23,14 +26,35 @@ namespace Server
 	/// </summary>
 	public class ServerDatabase
 	{
+		/// <summary>
+		/// The database instance that will hold all the working information
+		/// </summary>
 		private static UserDatabase database = new UserDatabase();
-		public static bool DatabaseLoaded = false;
+
+		/// <summary>
+		/// <see cref="DatabaseLoaded"/>
+		/// </summary>
+		private static bool databaseLoaded = false;
+		/// <summary>
+		/// Determines if the database has been loaded
+		/// </summary>
+		/// <value>True if loaded, false otherwise</value>
+		public static bool DatabaseLoaded
+		{
+			set
+			{
+				databaseLoaded = value;
+			}
+		}
 
 		/// <summary>
 		/// Timer to save the database periodically
 		/// </summary>
 		private static Timer saveTimer = new Timer();
 
+		/// <summary>
+		/// Standard constructor
+		/// </summary>
 		public ServerDatabase()
 		{
 			//
@@ -44,7 +68,7 @@ namespace Server
 		/// <returns>True if loading is successful. False if the database is already loaded or loading failed.</returns>
 		public static bool loadDatabase()
 		{
-			if (DatabaseLoaded)
+			if (databaseLoaded)
 				return false;
 			database = new UserDatabase();
 			try
@@ -89,12 +113,12 @@ namespace Server
 		/// <summary>
 		/// Adds a new user. Make sure you have loaded the database before trying to add a user.
 		/// </summary>
-		/// <param name="userName">The user name that you are adding</param>
+		/// <param name="username">The user name that you are adding</param>
 		/// <param name="password">The password of the user you are adding</param>
 		/// <returns>Returns true if the user was successfully added. Returns false otherwise.</returns>
 		public static bool addUser(string username, string password)
 		{
-			if (DatabaseLoaded == false)
+			if (databaseLoaded == false)
 				return false;
 
 			database.AcceptChanges();
@@ -131,6 +155,11 @@ namespace Server
 				return userRow.Password;
 		}
 
+		/// <summary>
+		/// Returns the user ID of the user defined in the passed string
+		/// </summary>
+		/// <param name="username">Username of the user who's user ID is need</param>
+		/// <returns>The user ID for username if found, -1 otherwise</returns>
 		public static int getUserID(string username)
 		{
 			UserDatabase.UserDataRow userRow = database.UserData.FindByUsername(username);

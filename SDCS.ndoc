@@ -25,7 +25,6 @@
             <property name="Title" value="SDCS Code Documentation" />
             <property name="SdkLinksOnWeb" value="True" />
             <property name="ShowMissingSummaries" value="True" />
-            <property name="ShowMissingRemarks" value="True" />
             <property name="ShowMissingParams" value="True" />
             <property name="ShowMissingReturns" value="True" />
             <property name="ShowMissingValues" value="True" />

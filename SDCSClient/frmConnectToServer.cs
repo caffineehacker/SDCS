@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/04 04:30:55  tim
+ * Revision 1.8  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.7  2007-02-04 04:30:55  tim
  * More shutdown code changes
  *
  * Revision 1.6  2007-02-04 04:22:21  tim
@@ -40,6 +43,9 @@ namespace Client
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Initializes a new instance of frmConnectToServer class
+		/// </summary>
 		public frmConnectToServer()
 		{
 			//
@@ -159,6 +165,11 @@ namespace Client
 		}
 		#endregion
 
+		/// <summary>
+		/// Handles the event for when the user clicks on the connect button
+		/// </summary>
+		/// <param name="sender">Ignored input</param>
+		/// <param name="e">Ignored input</param>
 		private void btnConnect_Click(object sender, System.EventArgs e)
 		{
 			ClientNetwork.IPAddress = txtIP.Text;

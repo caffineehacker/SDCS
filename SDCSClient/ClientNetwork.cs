@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.8  2007/02/04 04:21:45  tim
+ * Revision 1.9  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.8  2007-02-04 04:21:45  tim
  * Added comments to better explain the code and fixed a spelling mistake in a function name
  *
  * Revision 1.7  2007-02-01 18:13:55  tim
@@ -28,9 +31,18 @@ using System.Threading;
 
 namespace Client
 {
+	/// <summary>
+	/// An instance of this class is passed when a DataReceived event is raised.
+	/// </summary>
 	public class DataReceivedEventArgs : EventArgs
 	{
+		/// <summary>
+		/// The header received from the server
+		/// </summary>
 		public Network.Header Header;
+		/// <summary>
+		/// The data received from the server
+		/// </summary>
 		public byte[] Data;
 	}
 
@@ -68,7 +80,7 @@ namespace Client
 		/// <summary>
 		/// Connects to the server and then logs you in
 		/// </summary>
-		/// <param name="userName">The user's username</param>
+		/// <param name="username">The user's username</param>
 		/// <param name="password">The user's password</param>
 		/// <returns>True if the login is successful, false otherwise</returns>
 		public static bool logInToServer(string username, string password)

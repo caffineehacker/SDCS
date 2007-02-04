@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/01 16:19:41  tim
+ * Revision 1.4  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.3  2007-02-01 16:19:41  tim
  * Added code for storing the user's data and adding a new user from the server program.
  *
  * Revision 1.2  2007-02-01 12:00:55  tim
@@ -19,10 +22,17 @@ namespace SDCSCommon
 	/// </summary>
 	public class CryptoFunctions
 	{
+		/// <summary>
+		/// Standard constructor
+		/// </summary>
 		public CryptoFunctions()
 		{}
 
-
+		/// <summary>
+		/// One-way hashes a string using the MD5 algorithm
+		/// </summary>
+		/// <param name="str">String to apply the MD5 hash to</param>
+		/// <returns>The MD5 hashed version of the passed string</returns>
 		public static string getMD5Hash(string str)
 		{
 			// First we need to convert the string into bytes, which

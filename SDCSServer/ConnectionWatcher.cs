@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/04 04:30:55  tim
+ * Revision 1.8  2007/02/04 05:28:53  tim
+ * Updated all of the XML comments
+ *
+ * Revision 1.7  2007-02-04 04:30:55  tim
  * More shutdown code changes
  *
  * Revision 1.6  2007-02-04 04:21:45  tim
@@ -64,17 +67,25 @@ namespace Server
 			{}
 		}
 
+		/// <summary>
+		/// Send data to the client
+		/// </summary>
+		/// <param name="data">The array of bytes to be sent</param>
 		public void sendData(byte[] data)
 		{
 			try
 			{
 				conn.stream.Write(data, 0, data.Length);
 			}
-			catch // Close the connection
+			catch // ToDo: Close the connection
 			{
 			}
 		}
 
+		/// <summary>
+		/// Prefered constructor to be used
+		/// </summary>
+		/// <param name="con">The connection that this instance is based on</param>
 		public ConnectionWatcher(ServerNetwork.connection con)
 		{
 			conn = con;
