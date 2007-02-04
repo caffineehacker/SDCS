@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/01 18:13:55  tim
+ * Revision 1.6  2007/02/04 04:21:45  tim
+ * Added comments to better explain the code and fixed a spelling mistake in a function name
+ *
+ * Revision 1.5  2007-02-01 18:13:55  tim
  * Final touches on password authentication and fixing a server crash bug
  *
  * Revision 1.4  2007-02-01 17:56:43  tim
@@ -75,17 +78,21 @@ namespace Server
 			sendHead.FromID = -1;
 			sendHead.ToID = 0;
 			sendHead.Length = 32;
-			randomCode = new byte[32];
 
+			// Create a random 32 byte unicode string
+			randomCode = new byte[32];
 			Random rand = new Random();
 			rand.NextBytes(randomCode);
 
+			// And send it to the client
 			conn.stream.Write(Network.headerToBytes(sendHead), 0, Network.HEADER_SIZE);
 			conn.stream.Write(randomCode, 0, 32);
 
 			// Now loop forever
 			while (true)
 			{
+				// Each while loop continually checks if the server is shutting down.
+				// This is to make sure that we don't end up with zombie threads.
 				while (conn.stream.DataAvailable == false)
 				{if (ServerNetwork.ShuttingDown)
 					 return;
@@ -105,8 +112,8 @@ namespace Server
 				// This is to prevent a user from spoofing themselves as another user
 				head.FromID = conn.userID;
 
+				// Read in exactly the amount of data sent
 				byte[] data = new byte[head.Length];
-
 				for (int i = 0; i < head.Length; i++)
 				{
 					while (conn.stream.DataAvailable == false)
@@ -120,7 +127,7 @@ namespace Server
 				{
 					switch (head.DataType)
 					{
-						case Network.DataTypes.InstantMessage:
+						case Network.DataTypes.InstantMessage: // Instant message data
 							for (int i = 0; i < ServerNetwork.netStreams.Count; i++)
 							{
 								if (((ServerNetwork.connection)ServerNetwork.netStreams[i]).userID == head.ToID)
@@ -133,30 +140,34 @@ namespace Server
 								}
 							}
 							break;
-						case Network.DataTypes.WhiteBoard:
+						case Network.DataTypes.WhiteBoard: // Whiteboard drawing information
 							break;
-						case Network.DataTypes.LoginInformation:
+						case Network.DataTypes.LoginInformation: // Initial login
+							// We receive a double hased password from the client. We store the single hash in the user database.
+							// First we convert the received username and double hash in to unicode strings.
 							int usernameLength = BitConverter.ToInt32(data,0);
 							string username = System.Text.UnicodeEncoding.Unicode.GetString(data, 4, usernameLength);
 							string password = System.Text.UnicodeEncoding.Unicode.GetString(data, 4 + usernameLength, data.Length - (4 + usernameLength));
-
 
 							Network.Header confirmHead = new SDCSCommon.Network.Header();
 							confirmHead.DataType = Network.DataTypes.LoginStatus;
 							confirmHead.FromID = -1;
 							confirmHead.Length = 4;
 
+							// This statement performs the second hash on the stored password and compares it with the password received from
+							// the client.
 							if (CryptoFunctions.getMD5Hash(String.Concat(ServerDatabase.getUserPass(username), System.Text.UnicodeEncoding.Unicode.GetString(randomCode))) == password)
-							{
+							{ // Login successful
 								conn.userID = ServerDatabase.getUserID(username);
 								confirmHead.ToID = conn.userID;
 
+								// Send the Login OK message to let the client know they're authenticated
 								conn.stream.Write(Network.headerToBytes(confirmHead), 0, Network.HEADER_SIZE);
 								conn.stream.Write(BitConverter.GetBytes(Network.LoginOK), 0, 4);
 								loggedIn = true;
 							}
 							else
-							{
+							{ // Login failed
 								confirmHead.ToID = 0;
 								conn.stream.Write(Network.headerToBytes(confirmHead), 0, Network.HEADER_SIZE);
 								conn.stream.Write(BitConverter.GetBytes(Network.LoginBad), 0, 4);

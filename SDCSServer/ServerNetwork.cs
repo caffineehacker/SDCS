@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/04 03:59:37  tim
+ * Revision 1.6  2007/02/04 04:21:45  tim
+ * Added comments to better explain the code and fixed a spelling mistake in a function name
+ *
+ * Revision 1.5  2007-02-04 03:59:37  tim
  * Changed some shutdown code so that the UI and the core code are more seperated
  *
  * Revision 1.4  2007-02-01 17:56:43  tim
@@ -107,6 +110,9 @@ namespace Server
 			startListening();
 		}
 
+		/// <summary>
+		/// Function for the listening thread to live in
+		/// </summary>
 		private static void listeningThreadFunc()
 		{
 			TcpListener listener = new TcpListener(IPAddress.Any, listeningPort);

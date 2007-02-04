@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 17:18:43  tim
+ * Revision 1.5  2007/02/04 04:21:45  tim
+ * Added comments to better explain the code and fixed a spelling mistake in a function name
+ *
+ * Revision 1.4  2007-02-01 17:18:43  tim
  * Changed the login process to use usernames and passwords
  *
  * Revision 1.3  2007-02-01 12:00:55  tim
@@ -155,10 +158,7 @@ namespace Client
 			ClientNetwork.IPAddress = txtIP.Text;
 			ClientNetwork.Port = (int)numPort.Value;
 			if (!(ClientNetwork.logInToServer(txtUsername.Text, txtPassword.Text)))
-			{
-				ClientNetwork.Disconect();
-				ClientNetwork.Connected = false;
-			}
+				MessageBox("Login Failed");
 			this.Dispose();
 		}
 	}

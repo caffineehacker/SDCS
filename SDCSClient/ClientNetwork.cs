@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/01 18:13:55  tim
+ * Revision 1.8  2007/02/04 04:21:45  tim
+ * Added comments to better explain the code and fixed a spelling mistake in a function name
+ *
+ * Revision 1.7  2007-02-01 18:13:55  tim
  * Final touches on password authentication and fixing a server crash bug
  *
  * Revision 1.6  2007-02-01 17:56:43  tim
@@ -47,6 +50,9 @@ namespace Client
 		public static Thread listeningThread = new Thread(new ThreadStart(listeningFunc));
 
 		private static bool connected = false;
+		/// <summary>
+		/// If true then the client is currently connected to the server, false otherwise.
+		/// </summary>
 		public static bool Connected
 		{
 			get
@@ -67,13 +73,8 @@ namespace Client
 		/// <returns>True if the login is successful, false otherwise</returns>
 		public static bool logInToServer(string username, string password)
 		{
-			try
-			{
-				connectionStream.Close();
-			}
-			catch
-			{
-			}
+			// Close any existing connections
+			Disconnect();
 
 			Network.Header head;
 			string randomCodeData = "";
@@ -107,14 +108,14 @@ namespace Client
 			}
 			catch
 			{
-				System.Windows.Forms.MessageBox.Show("Could not connect to host");
+				//System.Windows.Forms.MessageBox.Show("Could not connect to host");
 				connected = false;
 				return false;
 			}
 
 			if (head.DataType != Network.DataTypes.RandomPassCode) // Wrong type for first packet
 			{
-				System.Windows.Forms.MessageBox.Show("Illegal data received from host");
+				//System.Windows.Forms.MessageBox.Show("Illegal data received from host");
 				connected = false;
 				return false;
 			}
@@ -169,7 +170,10 @@ namespace Client
 			return true;
 		}
 
-		public static void Disconect()
+		/// <summary>
+		/// Call to disconnect from the server
+		/// </summary>
+		public static void Disconnect()
 		{
 			try
 			{
@@ -186,8 +190,12 @@ namespace Client
 			connected = false;
 		}
 
+		/// <summary>
+		/// Function for the listening thread to live in
+		/// </summary>
 		private static void listeningFunc()
 		{
+			// Loop for the lifetime of the thread
 			while (true)
 			{
 				while (connectionStream.DataAvailable != true)
@@ -195,6 +203,8 @@ namespace Client
 					if (connected == false)
 						return;
 				}
+
+				// Get the header
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
 				for (int i = 0; i < Network.HEADER_SIZE; i++)
 				{
@@ -206,6 +216,7 @@ namespace Client
 					headerBuffer[i] = (byte)connectionStream.ReadByte();
 				}
 
+				// Get the data
 				Network.Header head = Network.bytesToHeader(headerBuffer);
 				byte[] data = new byte[head.Length];
 
@@ -219,12 +230,14 @@ namespace Client
 					data[i] = (byte)connectionStream.ReadByte();
 				}
 
+				// Raise the DataReceivedEvent to let the gui know new data has arrived
 				DataReceivedEventArgs eventArgs = new DataReceivedEventArgs();
 				eventArgs.Header = head;
 				eventArgs.Data = data;
 
 				DataReceived(null, eventArgs);
 
+				// Sleep to let other threads do their thing
 				Thread.Sleep(0);
 			}
 		}
