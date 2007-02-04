@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 16:19:41  tim
+ * Revision 1.5  2007/02/04 03:59:37  tim
+ * Changed some shutdown code so that the UI and the core code are more seperated
+ *
+ * Revision 1.4  2007-02-01 16:19:41  tim
  * Added code for storing the user's data and adding a new user from the server program.
  *
  * Revision 1.3  2007-02-01 14:05:15  tim
@@ -60,24 +63,7 @@ namespace Server
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
-			ServerNetwork.ShuttingDown = true;
-			try
-			{
-				ServerNetwork.listeningThread.Abort();
-			}
-			catch
-			{}
-
-			for (int i = 0; i < ServerNetwork.netStreams.Count; i++)
-			{
-				try
-				{
-					((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.watchingThread.Abort();
-				}
-				catch
-				{}
-			}
-
+			ServerNetwork.shutDown();
 			if (MessageBox.Show("Save the database?", "Save?", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
 				ServerDatabase.saveDatabase();
 

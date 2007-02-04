@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/01 17:56:43  tim
+ * Revision 1.5  2007/02/04 03:59:37  tim
+ * Changed some shutdown code so that the UI and the core code are more seperated
+ *
+ * Revision 1.4  2007-02-01 17:56:43  tim
  * Reworked the login system to use usernames and passwords
  *
  * Revision 1.3  2007-02-01 16:19:41  tim
@@ -55,6 +58,30 @@ namespace Server
 		/// </summary>
 		public ServerNetwork()
 		{
+		}
+
+		/// <summary>
+		/// Call when shutting down the server program to close the network and abort the threads
+		/// </summary>
+		public static void shutDown()
+		{
+			ShuttingDown = true;
+			try
+			{
+				listeningThread.Abort();
+			}
+			catch
+			{}
+
+			for (int i = 0; i < netStreams.Count; i++)
+			{
+				try
+				{
+					((connection)netStreams[i]).watchingClass.watchingThread.Abort();
+				}
+				catch
+				{}
+			}
 		}
 
 		/// <summary>
