@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.9  2007/02/05 19:33:54  tim
+ * Revision 1.10  2007/02/05 20:27:47  tim
+ * Work on getting user status updates working
+ *
+ * Revision 1.9  2007-02-05 19:33:54  tim
  * Some code cleanups for readability
  *
  * Revision 1.8  2007-02-04 05:28:53  tim
@@ -29,6 +32,7 @@
 using System;
 using System.Threading;
 using SDCSCommon;
+using System.Collections;
 
 namespace Server
 {
@@ -51,6 +55,33 @@ namespace Server
 		private bool loggedIn = false;
 
 		/// <summary>
+		/// Set to true to signal the thread that buddy list data is waiting.
+		/// </summary>
+		public bool BuddyListDataWaiting = false;
+
+		private bool sendingBuddyListData = false;
+		/// <summary>
+		/// Wait until this turns to false before adding data to the buddy list data array
+		/// </summary>
+		public bool SendingBuddyListData
+		{
+			get
+			{
+				return sendingBuddyListData;
+			}
+		}
+
+		/// <summary>
+		/// Set to true while adding data to the buddy list array. Only add data when sendingBuddyListData is false
+		/// </summary>
+		public bool AddingBuddyListData = false;
+
+		/// <summary>
+		/// Add new buddy list data here. Only add objects of the type BuddyListData and only add data after setting AddingBuddyListData to true.
+		/// </summary>
+		public ArrayList BuddyListData = new ArrayList();
+
+		/// <summary>
 		/// Default empty constructor
 		/// </summary>
 		public ConnectionWatcher()
@@ -58,16 +89,27 @@ namespace Server
 		}
 
 		/// <summary>
-		/// Call when shutting down the server
+		/// Call when shutting down the server or to disconnect the client
 		/// </summary>
 		public void Shutdown()
 		{
+			loggedIn = false;
 			try
 			{
 				watchingThread.Abort();
 			}
 			catch
 			{}
+			try
+			{
+				conn.stream.Close();
+			}
+			catch
+			{
+			}
+			conn.userID = 0;
+
+			ServerNetwork.netStreams.Remove(conn);
 		}
 
 		/// <summary>
@@ -98,6 +140,35 @@ namespace Server
 			watchingThread.Start();
 		}
 
+		private void sendBuddyListData()
+		{
+			// This code effectively creates a semephore
+			sendingBuddyListData = true;
+			while (AddingBuddyListData || SendingBuddyListData == false)
+			{
+				if (SendingBuddyListData)
+					sendingBuddyListData = false;
+				else
+					sendingBuddyListData = true;
+				Thread.Sleep(0);
+			}
+
+			Network.Header buddyHeader = new Network.Header();
+			buddyHeader.DataType = Network.DataTypes.BuddyListUpdate;
+			buddyHeader.FromID = -1;
+			buddyHeader.ToID = conn.userID;
+			
+			byte[] buddyBytes = Network.BuddyListDataToBytes((Network.BuddyListData[])BuddyListData.ToArray(typeof(Network.BuddyListData)));
+
+			buddyHeader.Length = buddyBytes.Length;
+			sendData(Network.headerToBytes(buddyHeader));
+			sendData(buddyBytes);
+
+			BuddyListData.Clear();
+
+			sendingBuddyListData = false;
+		}
+
 		/// <summary>
 		/// Function for the connection watching thread to live in. Basically is a message pump for the network
 		/// </summary>
@@ -125,9 +196,14 @@ namespace Server
 				// Each while loop continually checks if the server is shutting down.
 				// This is to make sure that we don't end up with zombie threads.
 				while (conn.stream.DataAvailable == false)
-				{if (ServerNetwork.ShuttingDown)
-					 return;
-					Thread.Sleep(100);}
+				{
+					if (ServerNetwork.ShuttingDown)
+                        return;
+					if (BuddyListDataWaiting)
+						sendBuddyListData();
+					Thread.Sleep(100);
+				}
+
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
 				for (int i = 0; i < headerBuffer.Length; i++)
 				{
@@ -154,6 +230,7 @@ namespace Server
 					data[i] = (byte)conn.stream.ReadByte();
 				}
 
+				// We don't want to allow someone to do anything but log in until they are logged in
 				if (loggedIn || head.DataType == Network.DataTypes.LoginInformation)
 				{
 					switch (head.DataType)

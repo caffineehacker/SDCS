@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/04 05:28:53  tim
+ * Revision 1.5  2007/02/05 20:27:47  tim
+ * Work on getting user status updates working
+ *
+ * Revision 1.4  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.3  2007-02-01 17:18:43  tim
@@ -73,7 +76,7 @@ namespace SDCSCommon
 			/// </summary>
 			WhiteBoard,
 			/// <summary>
-			/// For assigning a client a user ID. Is this necessary?
+			/// For creating the double hashed password code.
 			/// </summary>
 			RandomPassCode,
 			/// <summary>
@@ -88,6 +91,40 @@ namespace SDCSCommon
 			/// Sent from the server with updated information on buddy states
 			/// </summary>
 			BuddyListUpdate
+		}
+
+		/// <summary>
+		/// Used to convey the state a user is in through buddy list data
+		/// </summary>
+		public enum UserState
+		{
+			/// <summary>
+			/// The user has gone offline
+			/// </summary>
+			Offline,
+			/// <summary>
+			/// The user has come online
+			/// </summary>
+			Online
+		}
+
+		/// <summary>
+		/// A structure for holding data about buddy list updates
+		/// </summary>
+		public struct BuddyListData
+		{
+			/// <summary>
+			/// The user ID of the buddy for which the status is being updated
+			/// </summary>
+			public int userID;
+			/// <summary>
+			/// The username of the buddy
+			/// </summary>
+			public string username;
+			/// <summary>
+			/// The new state of the buddy
+			/// </summary>
+			public UserState userState;
 		}
 
 		/// <summary>
@@ -158,6 +195,51 @@ namespace SDCSCommon
 			returnVal[1] = System.Text.UnicodeEncoding.Unicode.GetString(data, 4 + usernameLength, data.Length - (4 + usernameLength));
 
 			return returnVal;
+		}
+
+		/// <summary>
+		/// Converts BuddyListData[] into bytes to be sent across the network
+		/// </summary>
+		/// <param name="data">The BuddyListData to convert</param>
+		/// <returns>Bytes representing the given BuddyListData</returns>
+		public static byte[] BuddyListDataToBytes(BuddyListData[] data)
+		{
+			ArrayList temp = new ArrayList();
+
+			for (int i = 0; i < data.Length; i++)
+			{
+				byte[] usernameBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(data[i].username);
+				temp.AddRange(System.BitConverter.GetBytes(data[i].userID));
+				temp.AddRange(System.BitConverter.GetBytes(usernameBytes.Length));
+				temp.AddRange(usernameBytes);
+				temp.AddRange(System.BitConverter.GetBytes((int)data[i].userState));
+			}
+			return (byte[])temp.ToArray(typeof(byte));
+		}
+
+		/// <summary>
+		/// Converts bytes received as data from the server in to managable data
+		/// </summary>
+		/// <param name="bytes">The bytes to be converted</param>
+		/// <returns>Managable BuddyListData array</returns>
+		public static BuddyListData[] BytesToBuddyListData(byte[] bytes)
+		{
+			ArrayList returnVal = new ArrayList();
+
+			int baseCount = 0;
+			while (baseCount < bytes.Length)
+			{
+				BuddyListData data = new BuddyListData();
+				data.userID = System.BitConverter.ToInt32(bytes,baseCount);
+				int usernameLength = System.BitConverter.ToInt32(bytes, baseCount + 4);
+				data.username = System.Text.UnicodeEncoding.Unicode.GetString(bytes, baseCount + 8, usernameLength);
+				data.userState = (UserState)System.BitConverter.ToInt32(bytes, baseCount + 8 + usernameLength);
+				baseCount += 8 + usernameLength;
+
+				returnVal.Add(data);
+			}
+
+			return (BuddyListData[])returnVal.ToArray(typeof(BuddyListData));
 		}
 	}
 }
