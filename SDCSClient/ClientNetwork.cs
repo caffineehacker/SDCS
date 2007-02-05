@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.9  2007/02/04 05:28:53  tim
+ * Revision 1.10  2007/02/05 05:08:07  tim
+ * Updated comments and moved some code from GUI files to ClientNetwork.cs
+ *
+ * Revision 1.9  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.8  2007-02-04 04:21:45  tim
@@ -51,16 +54,31 @@ namespace Client
 		public delegate void DataReceivedDelegate(object sender, DataReceivedEventArgs e);
 
 		public static event DataReceivedDelegate DataReceived;
-		public static NetworkStream connectionStream = null;
-		public static int bufferSize = 0;
+		private static NetworkStream connectionStream = null;
 
 		public static string IPAddress = "sdcscvs.getmyip.com";
 		public static int Port = 3000;
 
-		public static string Username = "";
+		private static string username = "";
+		/// <summary>
+		/// Gets the currently logged in user's username. Defaults to "" if no user is logged in.
+		/// </summary>
+		public static string Username
+		{
+			get
+			{
+				return username;
+			}
+		}
 
-		public static Thread listeningThread = new Thread(new ThreadStart(listeningFunc));
+		/// <summary>
+		/// Thread that listens for incoming data from the server
+		/// </summary>
+		private static Thread listeningThread = new Thread(new ThreadStart(listeningFunc));
 
+		/// <summary>
+		/// <see cref="Connected"/>
+		/// </summary>
 		private static bool connected = false;
 		/// <summary>
 		/// If true then the client is currently connected to the server, false otherwise.
@@ -95,7 +113,6 @@ namespace Client
 			{
 				TcpClient client = new TcpClient(IPAddress, Port);
 				connectionStream = client.GetStream();
-				bufferSize = client.ReceiveBufferSize;
 				connected = true;
 
 				byte[] header = new byte[Network.HEADER_SIZE];
@@ -183,8 +200,9 @@ namespace Client
 		}
 
 		/// <summary>
-		/// Call to disconnect from the server
+		/// Call to disconnect from the server.
 		/// </summary>
+		/// <remarks>Always call disconnect before exiting the program. Failure to do so could cause a zombie thread</remarks>
 		public static void Disconnect()
 		{
 			try
@@ -199,7 +217,37 @@ namespace Client
 			}
 			catch
 			{}
+			username = "";
 			connected = false;
+		}
+
+		/// <summary>
+		/// Sends an IM to the user specified by the toID with the message passed to this function.
+		/// </summary>
+		/// <param name="toID">The userID of the user this message is to be sent to</param>
+		/// <param name="message">The message to send</param>
+		/// <returns>True if the sending was successful (doesn't mean the user received it, only that it was sent to the server), false otherwise.</returns>
+		public static bool SendIM(int toID, string message)
+		{
+			if (connected)
+			{
+				Network.Header head = new Network.Header();
+				// FromID is set at the server
+				head.FromID = 0;
+				head.ToID = toID;
+				head.DataType = Network.DataTypes.InstantMessage;
+			
+				byte[] data = System.Text.UnicodeEncoding.Unicode.GetBytes(message);
+				head.Length = data.Length;
+				connectionStream.Write(Network.headerToBytes(head), 0, Network.HEADER_SIZE);
+				connectionStream.Write(data, 0, data.Length);
+
+				return true;
+			}
+			
+			// Disconnect from the server if the data can't be sent
+			Disconnect();
+			return false;
 		}
 
 		/// <summary>

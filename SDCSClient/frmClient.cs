@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/04 20:13:30  scott
+ * Revision 1.8  2007/02/05 05:08:07  tim
+ * Updated comments and moved some code from GUI files to ClientNetwork.cs
+ *
+ * Revision 1.7  2007-02-04 20:13:30  scott
  * Added a nice login window
  *
  * Revision 1.6  2007-02-04 05:28:53  tim
@@ -71,7 +74,7 @@ namespace Client
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
-			ClientNetwork.listeningThread.Abort();
+			ClientNetwork.Disconnect();
 			if( disposing )
 			{
 				if (components != null) 
@@ -232,25 +235,14 @@ namespace Client
 
 		private void btnSend_Click(object sender, System.EventArgs e)
 		{
-			if (ClientNetwork.Connected == true)
+			if (ClientNetwork.SendIM((int)numUser.Value, txtInput.Text))
 			{
-				Network.Header head = new Network.Header();
-				head.FromID = 0;
-				head.ToID = (int)numUser.Value;
-				head.DataType = Network.DataTypes.InstantMessage;
-			
-				byte[] data = System.Text.UnicodeEncoding.Unicode.GetBytes(txtInput.Text);
-				head.Length = data.Length;
-				System.Collections.ArrayList sendAL = new ArrayList();
-				sendAL.AddRange(Network.headerToBytes(head));
-				sendAL.AddRange(data);
-				byte[] sendBuffer = (byte[])sendAL.ToArray(typeof(byte));
 				txtHistory.Text += ClientNetwork.Username + ": " + txtInput.Text + "\r\n";
 				txtInput.Text = "";
-				ClientNetwork.connectionStream.Write(sendBuffer, 0, sendBuffer.Length);
 			}
 			else
 			{
+				txtHistory.Text += "Connection to server lost";
 			}
 		}
 	}
