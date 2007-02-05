@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/05 14:57:38  tim
+ * Revision 1.5  2007/02/05 19:55:18  tim
+ * Cleanup
+ *
+ * Revision 1.4  2007-02-05 14:57:38  tim
  * Made the login form log in
  *
  * Revision 1.3  2007-02-04 20:33:40  tim
@@ -161,10 +164,5 @@ namespace Client
 		{
 			this.DialogResult = DialogResult.Cancel;
 		}
-
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-
 	}
 }
