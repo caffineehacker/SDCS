@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.8  2007/02/04 05:28:53  tim
+ * Revision 1.9  2007/02/05 19:33:54  tim
+ * Some code cleanups for readability
+ *
+ * Revision 1.8  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.7  2007-02-04 04:30:55  tim
@@ -71,7 +74,7 @@ namespace Server
 		/// Send data to the client
 		/// </summary>
 		/// <param name="data">The array of bytes to be sent</param>
-		public void sendData(byte[] data)
+		private void sendData(byte[] data)
 		{
 			try
 			{
@@ -79,6 +82,7 @@ namespace Server
 			}
 			catch // ToDo: Close the connection
 			{
+				Shutdown();
 			}
 		}
 
@@ -112,8 +116,8 @@ namespace Server
 			rand.NextBytes(randomCode);
 
 			// And send it to the client
-			conn.stream.Write(Network.headerToBytes(sendHead), 0, Network.HEADER_SIZE);
-			conn.stream.Write(randomCode, 0, 32);
+			sendData(Network.headerToBytes(sendHead));
+			sendData(randomCode);
 
 			// Now loop forever
 			while (true)
@@ -125,7 +129,7 @@ namespace Server
 					 return;
 					Thread.Sleep(100);}
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
-				for (int i = 0; i < Network.HEADER_SIZE; i++)
+				for (int i = 0; i < headerBuffer.Length; i++)
 				{
 					while (conn.stream.DataAvailable == false)
 					{if (frmServer.ShuttingDown)
@@ -189,15 +193,15 @@ namespace Server
 								confirmHead.ToID = conn.userID;
 
 								// Send the Login OK message to let the client know they're authenticated
-								conn.stream.Write(Network.headerToBytes(confirmHead), 0, Network.HEADER_SIZE);
-								conn.stream.Write(BitConverter.GetBytes(Network.LoginOK), 0, 4);
+								sendData(Network.headerToBytes(confirmHead));
+								sendData(BitConverter.GetBytes(Network.LoginOK));
 								loggedIn = true;
 							}
 							else
 							{ // Login failed
 								confirmHead.ToID = 0;
-								conn.stream.Write(Network.headerToBytes(confirmHead), 0, Network.HEADER_SIZE);
-								conn.stream.Write(BitConverter.GetBytes(Network.LoginBad), 0, 4);
+								sendData(Network.headerToBytes(confirmHead));
+								sendData(BitConverter.GetBytes(Network.LoginBad));
 							}
 							break;
 						default:
