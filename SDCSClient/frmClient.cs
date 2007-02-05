@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.8  2007/02/05 05:08:07  tim
+ * Revision 1.9  2007/02/05 14:58:49  john
+ * testing
+ *
+ * Revision 1.8  2007-02-05 05:08:07  tim
  * Updated comments and moved some code from GUI files to ClientNetwork.cs
  *
  * Revision 1.7  2007-02-04 20:13:30  scott
@@ -191,6 +194,7 @@ namespace Client
 			this.Menu = this.mainMenu1;
 			this.Name = "frmClient";
 			this.Text = "SDCS Client";
+			this.Load += new System.EventHandler(this.frmClient_Load);
 			((System.ComponentModel.ISupportInitialize)(this.numUser)).EndInit();
 			this.ResumeLayout(false);
 
@@ -244,6 +248,11 @@ namespace Client
 			{
 				txtHistory.Text += "Connection to server lost";
 			}
+		}
+
+		private void frmClient_Load(object sender, System.EventArgs e)
+		{
+			//testing
 		}
 	}
 }
