@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.3  2007/02/04 20:33:40  tim
+ * Revision 1.4  2007/02/05 14:57:38  tim
+ * Made the login form log in
+ *
+ * Revision 1.3  2007-02-04 20:33:40  tim
  * Some minor cleanups
  *
  */
@@ -89,6 +92,7 @@ namespace Client
 			this.cancelButton.Size = new System.Drawing.Size(112, 40);
 			this.cancelButton.TabIndex = 2;
 			this.cancelButton.Text = "Cancel";
+			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
 			// 
 			// loginButton
 			// 
@@ -97,6 +101,7 @@ namespace Client
 			this.loginButton.Size = new System.Drawing.Size(112, 40);
 			this.loginButton.TabIndex = 3;
 			this.loginButton.Text = "Login";
+			this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
 			// 
 			// UsernameLabel
 			// 
@@ -143,6 +148,19 @@ namespace Client
 
 		}
 		#endregion
+
+		private void loginButton_Click(object sender, System.EventArgs e)
+		{
+			if(ClientNetwork.logInToServer(usernameTextBox.Text, passwordTextBox.Text))
+				this.DialogResult = DialogResult.OK;
+			else
+				this.DialogResult = DialogResult.Cancel;
+		}
+
+		private void cancelButton_Click(object sender, System.EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
+		}
 
 		/// <summary>
 		/// The main entry point for the application.

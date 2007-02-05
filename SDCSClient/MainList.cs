@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/04 20:33:40  tim
+ * Revision 1.7  2007/02/05 14:57:38  tim
+ * Made the login form log in
+ *
+ * Revision 1.6  2007-02-04 20:33:40  tim
  * Some minor cleanups
  *
  * Revision 1.5  2007-02-04 20:13:30  scott
@@ -51,7 +54,8 @@ namespace Client
 			// TODO: Add any constructor code after InitializeComponent call
 			//
 			LoginForm initialLogin = new LoginForm();
-			initialLogin.ShowDialog();
+            if (initialLogin.ShowDialog() != DialogResult.OK)
+				MessageBox.Show("Bad login");
 
 			this.Show();
 		}
