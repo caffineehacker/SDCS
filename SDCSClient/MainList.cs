@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/05 14:57:38  tim
+ * Revision 1.8  2007/02/06 16:33:09  tim
+ * Added a client side message pump so i can test the network code
+ *
+ * Revision 1.7  2007-02-05 14:57:38  tim
  * Made the login form log in
  *
  * Revision 1.6  2007-02-04 20:33:40  tim
@@ -23,6 +26,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
+using SDCSCommon;
 
 namespace Client
 {
@@ -56,6 +60,9 @@ namespace Client
 			LoginForm initialLogin = new LoginForm();
             if (initialLogin.ShowDialog() != DialogResult.OK)
 				MessageBox.Show("Bad login");
+
+			// Handler function for received network data
+			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(ClientNetwork_DataReceived);
 
 			this.Show();
 		}
@@ -142,6 +149,23 @@ namespace Client
 		private void mnuExit_Click(object sender, System.EventArgs e)
 		{
 			Application.Exit();
+		}
+
+		/// <summary>
+		/// Message pump for the network
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void ClientNetwork_DataReceived(object sender, DataReceivedEventArgs e)
+		{
+			switch (e.Header.DataType)
+			{
+				case Network.DataTypes.BuddyListUpdate:
+					Network.BuddyListData[] bld = Network.BytesToBuddyListData(e.Data);
+					foreach (Network.BuddyListData bd in bld)
+						MessageBox.Show("User " + bd.username + " is now user ID " + bd.userID.ToString());
+					break;
+			}
 		}
 	}
 }
