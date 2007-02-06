@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.8  2007/02/04 05:28:53  tim
+ * Revision 1.9  2007/02/06 16:28:15  tim
+ * More code for the buddy list on the server side
+ *
+ * Revision 1.8  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.7  2007-02-04 04:30:55  tim
@@ -53,6 +56,10 @@ namespace Server
 			/// The user ID of the user logged in on this connection
 			/// </summary>
 			public int userID;
+			/// <summary>
+			/// The username of the user logged in on this connection
+			/// </summary>
+			public string username;
 		}
 
 		/// <summary>
@@ -148,6 +155,30 @@ namespace Server
 				conn.stream = client.GetStream();
 				netStreams.Add(conn);
 				conn.watchingClass = new ConnectionWatcher(conn);
+			}
+		}
+
+		/// <summary>
+		/// When a user state changes call this function to notify all the relevant clients
+		/// </summary>
+		/// <param name="userID">ID of the user who's state has changed</param>
+		/// <param name="username">The username of the user who's state has changed</param>
+		/// <param name="state">The new state of the user</param>
+		public static void notifyBuddyStatus(int userID, string username, SDCSCommon.Network.UserState state)
+		{
+			SDCSCommon.Network.BuddyListData bld = new SDCSCommon.Network.BuddyListData();
+			bld.userID = userID;
+			bld.username = username;
+			bld.userState = state;
+
+			for (int i = 0; i < netStreams.Count; i++)
+			{
+				((connection)netStreams[i]).watchingClass.AddingBuddyListData = true;
+				while (((connection)netStreams[i]).watchingClass.SendingBuddyListData)
+				{}
+				((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
+				((connection)netStreams[i]).watchingClass.BuddyListDataWaiting = true;
+				((connection)netStreams[i]).watchingClass.AddingBuddyListData = false;
 			}
 		}
 	}

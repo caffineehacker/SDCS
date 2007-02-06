@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.10  2007/02/05 20:27:47  tim
+ * Revision 1.11  2007/02/06 16:28:15  tim
+ * More code for the buddy list on the server side
+ *
+ * Revision 1.10  2007-02-05 20:27:47  tim
  * Work on getting user status updates working
  *
  * Revision 1.9  2007-02-05 19:33:54  tim
@@ -107,7 +110,10 @@ namespace Server
 			catch
 			{
 			}
+
+			ServerNetwork.notifyBuddyStatus(conn.userID, conn.username, Network.UserState.Offline);
 			conn.userID = 0;
+			conn.username = "";
 
 			ServerNetwork.netStreams.Remove(conn);
 		}
@@ -267,12 +273,16 @@ namespace Server
 							if (CryptoFunctions.getMD5Hash(String.Concat(ServerDatabase.getUserPass(username), System.Text.UnicodeEncoding.Unicode.GetString(randomCode))) == password)
 							{ // Login successful
 								conn.userID = ServerDatabase.getUserID(username);
+								conn.username = username;
 								confirmHead.ToID = conn.userID;
 
 								// Send the Login OK message to let the client know they're authenticated
 								sendData(Network.headerToBytes(confirmHead));
 								sendData(BitConverter.GetBytes(Network.LoginOK));
 								loggedIn = true;
+
+								// Let everyone know that the user is now online
+								ServerNetwork.notifyBuddyStatus(conn.userID, conn.username, Network.UserState.Online);
 							}
 							else
 							{ // Login failed
