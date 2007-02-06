@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.9  2007/02/06 21:33:30  tim
+ * Revision 1.10  2007/02/06 21:44:39  tim
+ * Fixed a small database bug
+ *
+ * Revision 1.9  2007-02-06 21:33:30  tim
  * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
  *
  * Revision 1.8  2007-02-06 16:33:09  tim
@@ -75,6 +78,9 @@ namespace Client
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
+			// Need to kill the listening thread by disconnecting or the program will never exit
+			ClientNetwork.Disconnect();
+
 			if( disposing )
 			{
 				if (components != null) 

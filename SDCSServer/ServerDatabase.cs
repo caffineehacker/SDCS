@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/04 05:28:53  tim
+ * Revision 1.6  2007/02/06 21:44:39  tim
+ * Fixed a small database bug
+ *
+ * Revision 1.5  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.4  2007-02-01 17:56:43  tim
@@ -80,7 +83,6 @@ namespace Server
 				database.UserData.UsernameColumn.Unique = true;
 				database.Users.UserIDColumn.AllowDBNull = false;
 
-				database.ReadXml("userDatabase.xml");
 				saveTimer.AutoReset = true;
 				saveTimer.Interval = 600000;
 				saveTimer.Elapsed +=new ElapsedEventHandler(saveTimer_Elapsed);
@@ -91,6 +93,13 @@ namespace Server
 				DatabaseLoaded = false;
 				return false;
 			}
+
+			try
+			{
+				database.ReadXml("userDatabase.xml");
+			}
+			catch
+			{}
 
 			DatabaseLoaded = true;
 			return true;
