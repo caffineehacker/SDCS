@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.11  2007/02/06 16:28:15  tim
+ * Revision 1.12  2007/02/06 21:33:30  tim
+ * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
+ *
+ * Revision 1.11  2007-02-06 16:28:15  tim
  * More code for the buddy list on the server side
  *
  * Revision 1.10  2007-02-05 20:27:47  tim
@@ -114,6 +117,7 @@ namespace Server
 			ServerNetwork.notifyBuddyStatus(conn.userID, conn.username, Network.UserState.Offline);
 			conn.userID = 0;
 			conn.username = "";
+			sendingBuddyListData = false;
 
 			ServerNetwork.netStreams.Remove(conn);
 		}
@@ -171,6 +175,7 @@ namespace Server
 			sendData(buddyBytes);
 
 			BuddyListData.Clear();
+			BuddyListDataWaiting = false;
 
 			sendingBuddyListData = false;
 		}
@@ -246,11 +251,8 @@ namespace Server
 							{
 								if (((ServerNetwork.connection)ServerNetwork.netStreams[i]).userID == head.ToID)
 								{
-									System.Collections.ArrayList outgoing = new System.Collections.ArrayList();
-									outgoing.AddRange(Network.headerToBytes(head));
-									outgoing.AddRange(data);
-
-									((ServerNetwork.connection)ServerNetwork.netStreams[i]).stream.Write((byte[])outgoing.ToArray(typeof(byte)), 0, outgoing.Count);
+									((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.sendData(Network.headerToBytes(head));
+									((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.sendData(data);
 								}
 							}
 							break;

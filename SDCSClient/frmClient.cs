@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.9  2007/02/05 14:58:49  john
+ * Revision 1.10  2007/02/06 21:33:30  tim
+ * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
+ *
+ * Revision 1.9  2007-02-05 14:58:49  john
  * testing
  *
  * Revision 1.8  2007-02-05 05:08:07  tim
@@ -194,7 +197,6 @@ namespace Client
 			this.Menu = this.mainMenu1;
 			this.Name = "frmClient";
 			this.Text = "SDCS Client";
-			this.Load += new System.EventHandler(this.frmClient_Load);
 			((System.ComponentModel.ISupportInitialize)(this.numUser)).EndInit();
 			this.ResumeLayout(false);
 
@@ -234,6 +236,11 @@ namespace Client
 					break;
 				case Network.DataTypes.WhiteBoard:
 					break;
+				case Network.DataTypes.BuddyListUpdate:
+					Network.BuddyListData[] bldArray = Network.BytesToBuddyListData(e.Data);
+					foreach(Network.BuddyListData bld in bldArray)
+						MessageBox.Show(bld.username + " is now user ID #" + bld.userID.ToString());
+					break;
 			}
 		}
 
@@ -248,11 +255,6 @@ namespace Client
 			{
 				txtHistory.Text += "Connection to server lost";
 			}
-		}
-
-		private void frmClient_Load(object sender, System.EventArgs e)
-		{
-			//testing
 		}
 	}
 }

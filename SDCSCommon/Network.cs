@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/05 20:27:47  tim
+ * Revision 1.6  2007/02/06 21:33:30  tim
+ * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
+ *
+ * Revision 1.5  2007-02-05 20:27:47  tim
  * Work on getting user status updates working
  *
  * Revision 1.4  2007-02-04 05:28:53  tim
@@ -234,7 +237,7 @@ namespace SDCSCommon
 				int usernameLength = System.BitConverter.ToInt32(bytes, baseCount + 4);
 				data.username = System.Text.UnicodeEncoding.Unicode.GetString(bytes, baseCount + 8, usernameLength);
 				data.userState = (UserState)System.BitConverter.ToInt32(bytes, baseCount + 8 + usernameLength);
-				baseCount += 8 + usernameLength;
+				baseCount += 12 + usernameLength;
 
 				returnVal.Add(data);
 			}

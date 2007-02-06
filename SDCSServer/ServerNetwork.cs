@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.9  2007/02/06 16:28:15  tim
+ * Revision 1.10  2007/02/06 21:33:30  tim
+ * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
+ *
+ * Revision 1.9  2007-02-06 16:28:15  tim
  * More code for the buddy list on the server side
  *
  * Revision 1.8  2007-02-04 05:28:53  tim
@@ -42,7 +45,7 @@ namespace Server
 		/// <summary>
 		/// Holds all the information about a connection including the communication stream, the class associated with this connection, and the user ID
 		/// </summary>
-		public struct connection
+		public class connection
 		{
 			/// <summary>
 			/// The stream connected to the client

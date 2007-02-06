@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.8  2007/02/06 16:33:09  tim
+ * Revision 1.9  2007/02/06 21:33:30  tim
+ * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
+ *
+ * Revision 1.8  2007-02-06 16:33:09  tim
  * Added a client side message pump so i can test the network code
  *
  * Revision 1.7  2007-02-05 14:57:38  tim
@@ -57,12 +60,12 @@ namespace Client
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
-			LoginForm initialLogin = new LoginForm();
-            if (initialLogin.ShowDialog() != DialogResult.OK)
-				MessageBox.Show("Bad login");
 
 			// Handler function for received network data
 			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(ClientNetwork_DataReceived);
+			LoginForm initialLogin = new LoginForm();
+            if (initialLogin.ShowDialog() != DialogResult.OK)
+				MessageBox.Show("Bad login");
 
 			this.Show();
 		}

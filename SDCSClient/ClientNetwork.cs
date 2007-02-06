@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.10  2007/02/05 05:08:07  tim
+ * Revision 1.11  2007/02/06 21:33:30  tim
+ * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
+ *
+ * Revision 1.10  2007-02-05 05:08:07  tim
  * Updated comments and moved some code from GUI files to ClientNetwork.cs
  *
  * Revision 1.9  2007-02-04 05:28:53  tim
@@ -56,7 +59,7 @@ namespace Client
 		public static event DataReceivedDelegate DataReceived;
 		private static NetworkStream connectionStream = null;
 
-		public static string IPAddress = "sdcscvs.getmyip.com";
+		public static string IPAddress = "localhost";
 		public static int Port = 3000;
 
 		private static string username = "";
@@ -74,7 +77,7 @@ namespace Client
 		/// <summary>
 		/// Thread that listens for incoming data from the server
 		/// </summary>
-		private static Thread listeningThread = new Thread(new ThreadStart(listeningFunc));
+		private static Thread listeningThread;
 
 		/// <summary>
 		/// <see cref="Connected"/>
@@ -195,6 +198,7 @@ namespace Client
 				return false;
 			}
 			
+			listeningThread = new Thread(new ThreadStart(listeningFunc));
 			listeningThread.Start();
 			return true;
 		}
