@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/06 21:33:30  tim
+ * Revision 1.7  2007/02/08 22:24:43  tim
+ * Started setting things up for directory lookups and file transfer
+ *
+ * Revision 1.6  2007-02-06 21:33:30  tim
  * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
  *
  * Revision 1.5  2007-02-05 20:27:47  tim
@@ -31,7 +34,7 @@ namespace SDCSCommon
 		/// <summary>
 		/// This is the header size for transmissions in bytes
 		/// </summary>
-		public const int HEADER_SIZE = 20;
+		public const int HEADER_SIZE = 16;
 		
 		/// <summary>
 		/// Sent by the server when login information checks out
@@ -62,7 +65,7 @@ namespace SDCSCommon
 			/// <summary>
 			/// The length of the data not including this header
 			/// </summary>
-			public Int64 Length;
+			public int Length;
 		}
 
 		/// <summary>
@@ -93,7 +96,15 @@ namespace SDCSCommon
 			/// <summary>
 			/// Sent from the server with updated information on buddy states
 			/// </summary>
-			BuddyListUpdate
+			BuddyListUpdate,
+			/// <summary>
+			/// Sent from the client to the server in order to update the logged in user's directory listing
+			/// </summary>
+			DirectoryUpdate,
+			/// <summary>
+			/// Sent from the client to request the directory info on another user
+			/// </summary>
+			DirectoryRequest
 		}
 
 		/// <summary>
@@ -131,6 +142,22 @@ namespace SDCSCommon
 		}
 
 		/// <summary>
+		/// Sent as data from a client when updating their directory listing
+		/// </summary>
+		public struct DirectoryUpdateData
+		{
+			// ToDo: Add fields for each piece of information that will be in the directory
+		}
+
+		/// <summary>
+		/// Sent from the server in response to a directory request
+		/// </summary>
+		public struct DirectoryRequestData
+		{
+			// ToDo: Add fields for each piece of information that will be in the directory
+		}
+
+		/// <summary>
 		/// Standard constructor
 		/// </summary>
 		public Network()
@@ -163,7 +190,7 @@ namespace SDCSCommon
 			temp.FromID = System.BitConverter.ToInt32(bytes, 0);
 			temp.ToID = System.BitConverter.ToInt32(bytes, 4);
 			temp.DataType = (DataTypes)System.BitConverter.ToInt32(bytes, 8);
-			temp.Length = System.BitConverter.ToInt64(bytes, 12);
+			temp.Length = System.BitConverter.ToInt32(bytes, 12);
 
 			return temp;
 		}
