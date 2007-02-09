@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/06 21:44:39  tim
+ * Revision 1.7  2007/02/09 17:39:00  tim
+ * Updated documentation
+ *
+ * Revision 1.6  2007-02-06 21:44:39  tim
  * Fixed a small database bug
  *
  * Revision 1.5  2007-02-04 05:28:53  tim
@@ -25,7 +28,7 @@ using System.Timers;
 namespace Server
 {
 	/// <summary>
-	/// Summary description for ServerDatabase.
+	/// This class provides functions for working with the database
 	/// </summary>
 	public class ServerDatabase
 	{

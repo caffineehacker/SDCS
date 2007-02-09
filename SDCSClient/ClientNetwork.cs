@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.11  2007/02/06 21:33:30  tim
+ * Revision 1.12  2007/02/09 17:39:00  tim
+ * Updated documentation
+ *
+ * Revision 1.11  2007-02-06 21:33:30  tim
  * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
  *
  * Revision 1.10  2007-02-05 05:08:07  tim
@@ -52,10 +55,31 @@ namespace Client
 		public byte[] Data;
 	}
 
-	class ClientNetwork
+	/// <summary>
+	/// Contains functions for the client program to communicate over the network
+	/// </summary>
+	public class ClientNetwork
 	{
+		/// <summary>
+		/// Create a delegate of this type and add it to the DataReceived list to be notified on data received events
+		/// </summary>
 		public delegate void DataReceivedDelegate(object sender, DataReceivedEventArgs e);
 
+		/// <summary>
+		/// This event is raised when new data is received from the server. <seealso cref="Client.ClientNetwork.DataReceivedDelegate"/> <seealso cref="Client.ClientNetwork.DataReceivedEventArgs"/>
+		/// </summary>
+		/// <example><code>
+		///	public int main()
+		///	{
+		///		ClientNetwork.DataReceived += new ClientNetwork.DataReceivedDelegate(DataReceivedHandler);
+		///	}
+		///	
+		///	public void DataReceivedHandler(object o, DataReceivedEventArgs e)
+		///	{
+		///		// Add code (most likely a switch statement) here that handles the different data that could be received
+		///		// Data in e will always be decoded before being passed to the handler functions
+		///		...
+		///	}</code></example>
 		public static event DataReceivedDelegate DataReceived;
 		private static NetworkStream connectionStream = null;
 

@@ -28,6 +28,7 @@
             <property name="ShowMissingParams" value="True" />
             <property name="ShowMissingReturns" value="True" />
             <property name="ShowMissingValues" value="True" />
+            <property name="DocumentPrivates" value="True" />
             <property name="DocumentAttributes" value="True" />
             <property name="ShowTypeIdInAttributes" value="True" />
             <property name="CleanIntermediates" value="True" />
