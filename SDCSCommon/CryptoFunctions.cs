@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.4  2007/02/04 05:28:53  tim
+ * Revision 1.5  2007/02/09 21:52:22  tim
+ * Added some code to prepare for encrypting data
+ *
+ * Revision 1.4  2007-02-04 05:28:53  tim
  * Updated all of the XML comments
  *
  * Revision 1.3  2007-02-01 16:19:41  tim
@@ -18,10 +21,15 @@ using System.Security.Cryptography;
 namespace SDCSCommon
 {
 	/// <summary>
-	/// Summary description for MD5.
+	/// Contains functions for facilitating cryptographic actions
 	/// </summary>
 	public class CryptoFunctions
 	{
+		/// <summary>
+		/// This is to provide a default IV so that the cryptography functions have a seed
+		/// </summary>
+		static byte[] InitializationVector = new byte[] {0x00, 0xFF, 0x55, 0xAA, 0x5A, 0xA5, 0x51, 0x67};
+
 		/// <summary>
 		/// Standard constructor
 		/// </summary>
@@ -57,6 +65,51 @@ namespace SDCSCommon
 
 			// And return it
 			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Encrypts the given bytes using a symmetrical encryption algorithm with encryptionCode as the key
+		/// </summary>
+		/// <param name="toEncrypt">The bytes to be encrypted</param>
+		/// <param name="encryptionCode">The key to be used for encrypting/decrypting</param>
+		/// <returns>The encoded bytes</returns>
+		public static byte[] EncryptBytes(byte[] toEncrypt, string encryptionCode)
+		{
+			RijndaelManaged rij = new RijndaelManaged();
+			rij.Key = System.Text.UnicodeEncoding.Unicode.GetBytes(encryptionCode);
+			rij.IV = InitializationVector;
+
+			System.IO.MemoryStream ms = new System.IO.MemoryStream();
+			CryptoStream cs = new CryptoStream(ms, rij.CreateEncryptor(), CryptoStreamMode.Write);
+			cs.Write(toEncrypt, 0, toEncrypt.Length);
+			cs.Close();
+			ms.Close();
+
+			return ms.ToArray();
+		}
+
+		/// <summary>
+		/// Decrypts data using a symmetrical encryption technique
+		/// </summary>
+		/// <param name="toDecrypt">The bytes to be decrypted</param>
+		/// <param name="encryptionCode">The key for decrypting</param>
+		/// <returns>The decrypted bytes</returns>
+		public static byte[] DecryptBytes(byte[] toDecrypt, string encryptionCode)
+		{
+			RijndaelManaged rij = new RijndaelManaged();
+			rij.Key = System.Text.UnicodeEncoding.Unicode.GetBytes(encryptionCode);
+			rij.IV = InitializationVector;
+
+			System.IO.MemoryStream ms = new System.IO.MemoryStream(toDecrypt, 0, toDecrypt.Length);
+			CryptoStream cs = new CryptoStream(ms, rij.CreateEncryptor(), CryptoStreamMode.Read);
+
+			System.Collections.ArrayList retVal = new System.Collections.ArrayList(); 
+
+			byte[] data = new byte[toDecrypt.Length];
+			cs.Read(data, 0, toDecrypt.Length);
+			cs.Close();
+
+			return data;
 		}
 	}
 }

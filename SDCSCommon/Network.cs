@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.7  2007/02/08 22:24:43  tim
+ * Revision 1.8  2007/02/09 21:52:22  tim
+ * Added some code to prepare for encrypting data
+ *
+ * Revision 1.7  2007-02-08 22:24:43  tim
  * Started setting things up for directory lookups and file transfer
  *
  * Revision 1.6  2007-02-06 21:33:30  tim
@@ -34,7 +37,7 @@ namespace SDCSCommon
 		/// <summary>
 		/// This is the header size for transmissions in bytes
 		/// </summary>
-		public const int HEADER_SIZE = 16;
+		public const int HEADER_SIZE = 17;
 		
 		/// <summary>
 		/// Sent by the server when login information checks out
@@ -62,6 +65,10 @@ namespace SDCSCommon
 			/// The data type of the data being sent
 			/// </summary>
 			public DataTypes DataType;
+			/// <summary>
+			/// If true it means that data has been encrypted using the user's single hashed password and a symmetrical encryption algorithm
+			/// </summary>
+			public bool Encrypted;
 			/// <summary>
 			/// The length of the data not including this header
 			/// </summary>
