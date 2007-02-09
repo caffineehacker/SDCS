@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.5  2007/02/09 21:52:22  tim
+ * Revision 1.6  2007/02/09 22:01:03  tim
+ * Clean up
+ *
+ * Revision 1.5  2007-02-09 21:52:22  tim
  * Added some code to prepare for encrypting data
  *
  * Revision 1.4  2007-02-04 05:28:53  tim
@@ -102,8 +105,6 @@ namespace SDCSCommon
 
 			System.IO.MemoryStream ms = new System.IO.MemoryStream(toDecrypt, 0, toDecrypt.Length);
 			CryptoStream cs = new CryptoStream(ms, rij.CreateEncryptor(), CryptoStreamMode.Read);
-
-			System.Collections.ArrayList retVal = new System.Collections.ArrayList(); 
 
 			byte[] data = new byte[toDecrypt.Length];
 			cs.Read(data, 0, toDecrypt.Length);
