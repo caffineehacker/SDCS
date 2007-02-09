@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.12  2007/02/09 17:39:00  tim
+ * Revision 1.13  2007/02/09 18:08:47  tim
+ * Updated documentation
+ *
+ * Revision 1.12  2007-02-09 17:39:00  tim
  * Updated documentation
  *
  * Revision 1.11  2007-02-06 21:33:30  tim
@@ -66,7 +69,7 @@ namespace Client
 		public delegate void DataReceivedDelegate(object sender, DataReceivedEventArgs e);
 
 		/// <summary>
-		/// This event is raised when new data is received from the server. <seealso cref="Client.ClientNetwork.DataReceivedDelegate"/> <seealso cref="Client.ClientNetwork.DataReceivedEventArgs"/>
+		/// This event is raised when new data is received from the server. <seealso cref="Client.ClientNetwork.DataReceivedDelegate"/> <seealso cref="Client.DataReceivedEventArgs"/>
 		/// </summary>
 		/// <example><code>
 		///	public int main()
@@ -81,11 +84,25 @@ namespace Client
 		///		...
 		///	}</code></example>
 		public static event DataReceivedDelegate DataReceived;
+
+		/// <summary>
+		/// If null it means that a connection has not been made yet. Otherwise this is the stream through which communication to the server is performed
+		/// </summary>
 		private static NetworkStream connectionStream = null;
 
+		/// <summary>
+		/// The IPAddress or host name of the server. The default will connect to the main host though this should be different for each company/organization
+		/// </summary>
 		public static string IPAddress = "localhost";
+
+		/// <summary>
+		/// The remote host's port to connect to. By default this is set to 3000 and shouldn't be changed unless conflicting with other software
+		/// </summary>
 		public static int Port = 3000;
 
+		/// <summary>
+		/// The currently logged in user's username. Blank if no user is logged in. <seealso cref="Client.ClientNetwork.Username"/>
+		/// </summary>
 		private static string username = "";
 		/// <summary>
 		/// Gets the currently logged in user's username. Defaults to "" if no user is logged in.
@@ -128,6 +145,8 @@ namespace Client
 		/// <param name="username">The user's username</param>
 		/// <param name="password">The user's password</param>
 		/// <returns>True if the login is successful, false otherwise</returns>
+		/// <example><code>if (!ClientNetwork.logInToServer("Username", "Password"))
+		///		MessageBox.Show("Log in failed");</code></example>
 		public static bool logInToServer(string username, string password)
 		{
 			// Close any existing connections
@@ -230,17 +249,26 @@ namespace Client
 		/// <summary>
 		/// Call to disconnect from the server.
 		/// </summary>
-		/// <remarks>Always call disconnect before exiting the program. Failure to do so could cause a zombie thread</remarks>
+		/// <remarks>Always call disconnect before exiting the program. Failure to do so could cause a zombie thread.
+		/// Also note that this sets the <see cref="Client.ClientNetwork.Username">Username</see> to blank and makes <see cref="Client.ClientNetwork.Connected">Connected</see> false.</remarks>
+		/// <example>Always call this function on exit.
+		/// <code>protected override void Dispose( bool disposing )
+		///	{
+		///		// Always call this before exiting the program
+		///		ClientNetwork.Disconnect();
+		///	}</code></example>
 		public static void Disconnect()
 		{
 			try
 			{
+				// Try to kill the thread
 				listeningThread.Abort();
 			}
 			catch
 			{}
 			try
 			{
+				// Try to close the stream
 				connectionStream.Close();
 			}
 			catch
@@ -255,6 +283,12 @@ namespace Client
 		/// <param name="toID">The userID of the user this message is to be sent to</param>
 		/// <param name="message">The message to send</param>
 		/// <returns>True if the sending was successful (doesn't mean the user received it, only that it was sent to the server), false otherwise.</returns>
+		/// <example><code>public void btnSendIM_clicked(object o, EventArgs e)
+		/// {
+		///		// This assumes that a function for looking up a user ID has been written and that txtUsername and txtMessage are text boxes.
+		///		if (!SendIM(lookupUserID(txtUsername.Text), txtMessage.Text))
+		///			MessageBox.Show("Connection to server lost");
+		/// }</code></example>
 		public static bool SendIM(int toID, string message)
 		{
 			if (connected)

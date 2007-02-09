@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.8  2007/02/09 21:52:22  tim
+ * Revision 1.9  2007/02/09 18:08:47  tim
+ * Updated documentation
+ *
+ * Revision 1.8  2007-02-09 21:52:22  tim
  * Added some code to prepare for encrypting data
  *
  * Revision 1.7  2007-02-08 22:24:43  tim
@@ -165,7 +168,7 @@ namespace SDCSCommon
 		}
 
 		/// <summary>
-		/// Standard constructor
+		/// Standard empty constructor
 		/// </summary>
 		public Network()
 		{
@@ -176,6 +179,15 @@ namespace SDCSCommon
 		/// </summary>
 		/// <param name="head">The header to be converted</param>
 		/// <returns>A byte array representing the header</returns>
+		/// <example>Assuming we want to send an instant message
+		/// <code>SDCSCommon.Network.Header h = new SDCSCommon.Network.Header();
+		/// h.ToID = 3;
+		/// h.FromID = 0;
+		/// h.DataType = SDCSCommon.Network.DataTypes.InstantMessage;
+		/// h.Encrypted = false;
+		/// h.Length = Data.Length; // Assuming data is an array of bytes representing the IM text
+		/// 
+		/// netStream.Write(headerToBytes(h), 0, SDCSCommon.Network.HEADER_SIZE);</code></example>
 		public static byte[] headerToBytes(Header head)
 		{
 			ArrayList temp = new ArrayList();

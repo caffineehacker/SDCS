@@ -1,6 +1,9 @@
 /* $Id$
  * $Log$
- * Revision 1.6  2007/02/09 22:01:03  tim
+ * Revision 1.7  2007/02/09 18:08:47  tim
+ * Updated documentation
+ *
+ * Revision 1.6  2007-02-09 22:01:03  tim
  * Clean up
  *
  * Revision 1.5  2007-02-09 21:52:22  tim
@@ -31,10 +34,11 @@ namespace SDCSCommon
 		/// <summary>
 		/// This is to provide a default IV so that the cryptography functions have a seed
 		/// </summary>
+		/// <remarks>DO NOT CHANGE THIS VALUE</remarks>
 		static byte[] InitializationVector = new byte[] {0x00, 0xFF, 0x55, 0xAA, 0x5A, 0xA5, 0x51, 0x67};
 
 		/// <summary>
-		/// Standard constructor
+		/// Standard empty constructor
 		/// </summary>
 		public CryptoFunctions()
 		{}
@@ -44,6 +48,9 @@ namespace SDCSCommon
 		/// </summary>
 		/// <param name="str">String to apply the MD5 hash to</param>
 		/// <returns>The MD5 hashed version of the passed string</returns>
+		/// <example>If you were testing a newly entered password against its stored hase:
+		/// if (getMD5Hash(newPassword) != storedHash)
+		///		MessageBox.Show("Invalid Password");</example>
 		public static string getMD5Hash(string str)
 		{
 			// First we need to convert the string into bytes, which

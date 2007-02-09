@@ -4,6 +4,11 @@
         <assembly location=".\SDCSCommon\bin\Debug\SDCS.dll" documentation=".\SDCSCommon\CodeDocumentation.xml" />
         <assembly location=".\SDCSServer\bin\Debug\Server.exe" documentation=".\SDCSServer\CodeDocumentation.xml" />
     </assemblies>
+    <namespaces>
+        <namespace name="Client">This namespace contains all classes for the client application</namespace>
+        <namespace name="SDCSCommon">This namespace contains classes that are useful for both the server and the client applications</namespace>
+        <namespace name="Server">This namespace contains classes for the server application</namespace>
+    </namespaces>
     <documenters>
         <documenter name="JavaDoc">
             <property name="OutputDirectory" value=".\doc\" />
@@ -31,7 +36,6 @@
             <property name="DocumentPrivates" value="True" />
             <property name="DocumentAttributes" value="True" />
             <property name="ShowTypeIdInAttributes" value="True" />
-            <property name="CleanIntermediates" value="True" />
         </documenter>
         <documenter name="MSDN 2003">
             <property name="OutputDirectory" value=".\doc\" />
