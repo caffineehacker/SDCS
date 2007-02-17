@@ -1,31 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.10  2007/02/06 21:33:30  tim
- * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
- *
- * Revision 1.9  2007-02-05 14:58:49  john
- * testing
- *
- * Revision 1.8  2007-02-05 05:08:07  tim
- * Updated comments and moved some code from GUI files to ClientNetwork.cs
- *
- * Revision 1.7  2007-02-04 20:13:30  scott
- * Added a nice login window
- *
- * Revision 1.6  2007-02-04 05:28:53  tim
- * Updated all of the XML comments
- *
- * Revision 1.5  2007-02-02 02:28:27  tim
- * Made it so a user can tell if the login was successful
- *
- * Revision 1.4  2007-02-01 17:18:43  tim
- * Changed the login process to use usernames and passwords
- *
- * Revision 1.3  2007-02-01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System;
 using System.Drawing;
 using System.Collections;

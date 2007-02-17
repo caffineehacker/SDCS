@@ -1,31 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.9  2007/02/09 18:08:47  tim
- * Updated documentation
- *
- * Revision 1.8  2007-02-09 21:52:22  tim
- * Added some code to prepare for encrypting data
- *
- * Revision 1.7  2007-02-08 22:24:43  tim
- * Started setting things up for directory lookups and file transfer
- *
- * Revision 1.6  2007-02-06 21:33:30  tim
- * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
- *
- * Revision 1.5  2007-02-05 20:27:47  tim
- * Work on getting user status updates working
- *
- * Revision 1.4  2007-02-04 05:28:53  tim
- * Updated all of the XML comments
- *
- * Revision 1.3  2007-02-01 17:18:43  tim
- * Changed the login process to use usernames and passwords
- *
- * Revision 1.2  2007-02-01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System;
 using System.Collections;
 

@@ -1,34 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.10  2007/02/06 21:33:30  tim
- * Tracked down a bug that was cripling the network communications and implemented most of the rest of the buddy list network code
- *
- * Revision 1.9  2007-02-06 16:28:15  tim
- * More code for the buddy list on the server side
- *
- * Revision 1.8  2007-02-04 05:28:53  tim
- * Updated all of the XML comments
- *
- * Revision 1.7  2007-02-04 04:30:55  tim
- * More shutdown code changes
- *
- * Revision 1.6  2007-02-04 04:21:45  tim
- * Added comments to better explain the code and fixed a spelling mistake in a function name
- *
- * Revision 1.5  2007-02-04 03:59:37  tim
- * Changed some shutdown code so that the UI and the core code are more seperated
- *
- * Revision 1.4  2007-02-01 17:56:43  tim
- * Reworked the login system to use usernames and passwords
- *
- * Revision 1.3  2007-02-01 16:19:41  tim
- * Added code for storing the user's data and adding a new user from the server program.
- *
- * Revision 1.2  2007-02-01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System;
 using System.Threading;
 using System.Net.Sockets;

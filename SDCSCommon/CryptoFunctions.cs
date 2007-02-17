@@ -1,25 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.7  2007/02/09 18:08:47  tim
- * Updated documentation
- *
- * Revision 1.6  2007-02-09 22:01:03  tim
- * Clean up
- *
- * Revision 1.5  2007-02-09 21:52:22  tim
- * Added some code to prepare for encrypting data
- *
- * Revision 1.4  2007-02-04 05:28:53  tim
- * Updated all of the XML comments
- *
- * Revision 1.3  2007-02-01 16:19:41  tim
- * Added code for storing the user's data and adding a new user from the server program.
- *
- * Revision 1.2  2007-02-01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System;
 using System.Text;
 using System.Security.Cryptography;

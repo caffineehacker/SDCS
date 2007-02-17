@@ -1,10 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.2  2007/02/01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System.Reflection;
 using System.Runtime.CompilerServices;
 

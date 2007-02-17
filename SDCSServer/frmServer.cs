@@ -1,22 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.6  2007/02/04 05:28:53  tim
- * Updated all of the XML comments
- *
- * Revision 1.5  2007-02-04 03:59:37  tim
- * Changed some shutdown code so that the UI and the core code are more seperated
- *
- * Revision 1.4  2007-02-01 16:19:41  tim
- * Added code for storing the user's data and adding a new user from the server program.
- *
- * Revision 1.3  2007-02-01 14:05:15  tim
- * Started adding some database code for the server to keep track of users
- *
- * Revision 1.2  2007-02-01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System;
 using System.Drawing;
 using System.Collections;

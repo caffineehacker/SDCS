@@ -1,25 +1,3 @@
-/* $Id$
- * $Log$
- * Revision 1.8  2007/02/04 05:28:53  tim
- * Updated all of the XML comments
- *
- * Revision 1.7  2007-02-04 04:30:55  tim
- * More shutdown code changes
- *
- * Revision 1.6  2007-02-04 04:22:21  tim
- * Always build before commiting, fixed a typo
- *
- * Revision 1.5  2007-02-04 04:21:45  tim
- * Added comments to better explain the code and fixed a spelling mistake in a function name
- *
- * Revision 1.4  2007-02-01 17:18:43  tim
- * Changed the login process to use usernames and passwords
- *
- * Revision 1.3  2007-02-01 12:00:55  tim
- * Added CVS keywords
- *
- */
-
 using System;
 using System.Drawing;
 using System.Collections;
