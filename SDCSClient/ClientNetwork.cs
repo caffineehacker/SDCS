@@ -110,7 +110,7 @@ namespace Client
 		/// <returns>True if the login is successful, false otherwise</returns>
 		/// <example><code>if (!ClientNetwork.logInToServer("Username", "Password"))
 		///		MessageBox.Show("Log in failed");</code></example>
-		public static bool logInToServer(string username, string password)
+		public static bool logInToServer(string un, string password)
 		{
 			// Close any existing connections
 			Disconnect();
@@ -166,7 +166,7 @@ namespace Client
 			sendHead.ToID = -1;
 
 			byte[] passBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(password);
-			byte[] usernameBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(username);
+			byte[] usernameBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(un);
 			sendHead.Length = passBytes.Length + usernameBytes.Length + 4;
 
 			connectionStream.Write(SDCSCommon.Network.headerToBytes(sendHead), 0, SDCSCommon.Network.HEADER_SIZE);
@@ -203,6 +203,8 @@ namespace Client
 				{}
 				return false;
 			}
+
+			username = un;
 			
 			listeningThread = new Thread(new ThreadStart(listeningFunc));
 			listeningThread.Start();

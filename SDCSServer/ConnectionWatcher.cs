@@ -249,7 +249,9 @@ namespace Server
 								loggedIn = true;
 
 								// Let everyone know that the user is now online
+								conn.userState = SDCSCommon.Network.UserState.Online;
 								ServerNetwork.notifyBuddyStatus(conn.userID, conn.username, Network.UserState.Online);
+								ServerNetwork.refreshBuddyList(conn);
 							}
 							else
 							{ // Login failed

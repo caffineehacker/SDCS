@@ -108,7 +108,7 @@ namespace SDCSCommon
 		/// <summary>
 		/// A structure for holding data about buddy list updates
 		/// </summary>
-		public struct BuddyListData
+		public class BuddyListData
 		{
 			/// <summary>
 			/// The user ID of the buddy for which the status is being updated
@@ -122,6 +122,16 @@ namespace SDCSCommon
 			/// The new state of the buddy
 			/// </summary>
 			public UserState userState;
+
+			/// <summary>
+			/// Returns the username of this buddy
+			/// </summary>
+			/// <returns>This buddy's username</returns>
+			public override string ToString()
+			{
+				return username;
+			}
+
 		}
 
 		/// <summary>

@@ -124,7 +124,7 @@ namespace Client
 		[STAThread]
 		static void Main() 
 		{
-			Application.Run(new MainList());
+			Application.Run(new frmClient());
 		}
 
 		private void mnuExit_Click(object sender, System.EventArgs e)

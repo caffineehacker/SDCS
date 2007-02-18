@@ -23,7 +23,7 @@ namespace Client
 		private System.Windows.Forms.TextBox txtHistory;
 		private System.Windows.Forms.TextBox txtInput;
 		private System.Windows.Forms.Button btnSend;
-		private System.Windows.Forms.NumericUpDown numUser;
+		private System.Windows.Forms.ComboBox cmbUser;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -79,8 +79,7 @@ namespace Client
 			this.txtHistory = new System.Windows.Forms.TextBox();
 			this.txtInput = new System.Windows.Forms.TextBox();
 			this.btnSend = new System.Windows.Forms.Button();
-			this.numUser = new System.Windows.Forms.NumericUpDown();
-			((System.ComponentModel.ISupportInitialize)(this.numUser)).BeginInit();
+			this.cmbUser = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -143,33 +142,32 @@ namespace Client
 			// btnSend
 			// 
 			this.btnSend.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.btnSend.Location = new System.Drawing.Point(0, 225);
+			this.btnSend.Location = new System.Drawing.Point(0, 239);
 			this.btnSend.Name = "btnSend";
 			this.btnSend.Size = new System.Drawing.Size(296, 48);
 			this.btnSend.TabIndex = 2;
 			this.btnSend.Text = "Send";
 			this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
 			// 
-			// numUser
+			// cmbUser
 			// 
-			this.numUser.Dock = System.Windows.Forms.DockStyle.Top;
-			this.numUser.Location = new System.Drawing.Point(0, 200);
-			this.numUser.Name = "numUser";
-			this.numUser.Size = new System.Drawing.Size(296, 20);
-			this.numUser.TabIndex = 3;
+			this.cmbUser.Location = new System.Drawing.Point(8, 208);
+			this.cmbUser.Name = "cmbUser";
+			this.cmbUser.Size = new System.Drawing.Size(280, 21);
+			this.cmbUser.TabIndex = 3;
+			this.cmbUser.Text = "Select A User";
 			// 
 			// frmClient
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(296, 273);
-			this.Controls.Add(this.numUser);
+			this.ClientSize = new System.Drawing.Size(296, 287);
+			this.Controls.Add(this.cmbUser);
 			this.Controls.Add(this.btnSend);
 			this.Controls.Add(this.txtInput);
 			this.Controls.Add(this.txtHistory);
 			this.Menu = this.mainMenu1;
 			this.Name = "frmClient";
 			this.Text = "SDCS Client";
-			((System.ComponentModel.ISupportInitialize)(this.numUser)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -204,29 +202,47 @@ namespace Client
 			switch (e.Header.DataType)
 			{
 				case Network.DataTypes.InstantMessage:
-					txtHistory.Text += e.Header.FromID.ToString() + ": " + System.Text.UnicodeEncoding.Unicode.GetString(e.Data) + "\r\n";
+					string fromName = "User Unknown";
+					foreach (Network.BuddyListData bud in cmbUser.Items)
+						if (bud.userID == e.Header.FromID)
+							fromName = bud.username;
+					txtHistory.Text += fromName + ": " + System.Text.UnicodeEncoding.Unicode.GetString(e.Data) + "\r\n";
 					break;
 				case Network.DataTypes.WhiteBoard:
 					break;
 				case Network.DataTypes.BuddyListUpdate:
 					Network.BuddyListData[] bldArray = Network.BytesToBuddyListData(e.Data);
 					foreach(Network.BuddyListData bld in bldArray)
-						MessageBox.Show(bld.username + " is now user ID #" + bld.userID.ToString());
+					{
+						for (int i = cmbUser.Items.Count - 1; i >= 0; i--)
+						{
+							if (((Network.BuddyListData)cmbUser.Items[i]).userID == bld.userID)
+								cmbUser.Items.RemoveAt(i);
+						}
+
+						if (bld.userState == Network.UserState.Online)
+							cmbUser.Items.Add(bld);
+					}
 					break;
 			}
 		}
 
 		private void btnSend_Click(object sender, System.EventArgs e)
 		{
-			if (ClientNetwork.SendIM((int)numUser.Value, txtInput.Text))
+			if (cmbUser.SelectedIndex != -1)
 			{
-				txtHistory.Text += ClientNetwork.Username + ": " + txtInput.Text + "\r\n";
-				txtInput.Text = "";
+				if (ClientNetwork.SendIM(((Network.BuddyListData)cmbUser.SelectedItem).userID, txtInput.Text))
+				{
+					txtHistory.Text += ClientNetwork.Username + ": " + txtInput.Text + "\r\n";
+					txtInput.Text = "";
+				}
+				else
+				{
+					txtHistory.Text += "Connection to server lost";
+				}
 			}
 			else
-			{
-				txtHistory.Text += "Connection to server lost";
-			}
+				MessageBox.Show("Select a valid user please");
 		}
 	}
 }

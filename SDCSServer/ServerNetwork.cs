@@ -32,6 +32,10 @@ namespace Server
 			/// The username of the user logged in on this connection
 			/// </summary>
 			public string username;
+			/// <summary>
+			/// The current state of the user
+			/// </summary>
+			public SDCSCommon.Network.UserState userState;
 		}
 
 		/// <summary>
@@ -145,13 +149,40 @@ namespace Server
 
 			for (int i = 0; i < netStreams.Count; i++)
 			{
-				((connection)netStreams[i]).watchingClass.AddingBuddyListData = true;
-				while (((connection)netStreams[i]).watchingClass.SendingBuddyListData)
-				{}
-				((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
-				((connection)netStreams[i]).watchingClass.BuddyListDataWaiting = true;
-				((connection)netStreams[i]).watchingClass.AddingBuddyListData = false;
+				attachBuddyListData((connection)netStreams[i], bld);
 			}
+		}
+
+		/// <summary>
+		/// Sends data on all users currently logged in
+		/// </summary>
+		/// <param name="con">The connection this data should be sent to</param>
+		public static void refreshBuddyList(connection con)
+		{
+			foreach (connection budCon in netStreams)
+			{
+				SDCSCommon.Network.BuddyListData bld = new SDCSCommon.Network.BuddyListData();
+				bld.userID = budCon.userID;
+				bld.username = budCon.username;
+				bld.userState = budCon.userState;
+
+				attachBuddyListData(con, bld);
+			}
+		}
+
+		/// <summary>
+		/// Attaches buddylist data to a connection watcher.
+		/// </summary>
+		/// <param name="con">The connection to attach to</param>
+		/// <param name="bld">The data to attach</param>
+		private static void attachBuddyListData(connection con, SDCSCommon.Network.BuddyListData bld)
+		{
+			con.watchingClass.AddingBuddyListData = true;
+			while (con.watchingClass.SendingBuddyListData)
+			{}
+			con.watchingClass.BuddyListData.Add(bld);
+			con.watchingClass.BuddyListDataWaiting = true;
+			con.watchingClass.AddingBuddyListData = false;
 		}
 	}
 }
