@@ -119,6 +119,8 @@ namespace Server
 			sendingBuddyListData = true;
 			while (AddingBuddyListData || SendingBuddyListData == false)
 			{
+				if (ServerNetwork.ShuttingDown)
+					return;
 				if (SendingBuddyListData)
 					sendingBuddyListData = false;
 				else

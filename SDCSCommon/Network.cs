@@ -26,6 +26,7 @@ namespace SDCSCommon
 		/// <summary>
 		/// This is the structure for the header
 		/// </summary>
+		/// <remarks>When changing this make sure to change the HEADER_SIZE and the headerToBytes and bytesToHeader functions</remarks>
 		public struct Header
 		{
 			/// <summary>
@@ -166,6 +167,7 @@ namespace SDCSCommon
 			temp.AddRange(System.BitConverter.GetBytes(head.FromID));
 			temp.AddRange(System.BitConverter.GetBytes(head.ToID));
 			temp.AddRange(System.BitConverter.GetBytes((int)head.DataType));
+			temp.AddRange(System.BitConverter.GetBytes(head.Encrypted));
 			temp.AddRange(System.BitConverter.GetBytes(head.Length));
 			return (byte[])temp.ToArray(typeof(byte));
 		}
@@ -181,7 +183,8 @@ namespace SDCSCommon
 			temp.FromID = System.BitConverter.ToInt32(bytes, 0);
 			temp.ToID = System.BitConverter.ToInt32(bytes, 4);
 			temp.DataType = (DataTypes)System.BitConverter.ToInt32(bytes, 8);
-			temp.Length = System.BitConverter.ToInt32(bytes, 12);
+			temp.Encrypted = System.BitConverter.ToBoolean(bytes, 12);
+			temp.Length = System.BitConverter.ToInt32(bytes, 13);
 
 			return temp;
 		}

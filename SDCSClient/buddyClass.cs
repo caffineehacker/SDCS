@@ -17,7 +17,7 @@ namespace Client
 		/// <summary>
 		/// This is the screen name/handle/username for the buddy.
 		/// </summary>
-		string handle = new string();
+		//string handle = new string();
 		
 		/// <summary>
 		/// This is the numerical buddy Id.
