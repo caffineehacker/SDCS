@@ -94,8 +94,8 @@ namespace Server
 
 		private void sendBuddyListData()
 		{
-			// This code effectively creates a semephore
-			lock (BuddyListData)
+			// This code effectively creates a semaphore
+			lock (BuddyListData.SyncRoot)
 			{
 				Network.Header buddyHeader = new Network.Header();
 				buddyHeader.DataType = Network.DataTypes.BuddyListUpdate;

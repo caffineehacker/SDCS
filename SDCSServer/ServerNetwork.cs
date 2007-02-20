@@ -149,7 +149,7 @@ namespace Server
 
 			for (int i = 0; i < netStreams.Count; i++)
 			{
-				lock (((connection)netStreams[i]).watchingClass.BuddyListData)
+				lock (((connection)netStreams[i]).watchingClass.BuddyListData.SyncRoot)
 				{
 					((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
 				}
@@ -169,7 +169,7 @@ namespace Server
 				bld.username = budCon.username;
 				bld.userState = budCon.userState;
 
-				lock (con.watchingClass.BuddyListData)
+				lock (con.watchingClass.BuddyListData.SyncRoot)
 				{
 					con.watchingClass.BuddyListData.Add(bld);
 				}
