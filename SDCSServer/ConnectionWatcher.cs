@@ -63,14 +63,16 @@ namespace Server
 		}
 
 		/// <summary>
-		/// Send data to the client
+		/// Sends data to the client
 		/// </summary>
-		/// <param name="data">The array of bytes to be sent</param>
-		private void sendData(byte[] data)
+		/// <param name="data">The array of bytes to be sent, can take an arbitrary number of arrays</param>
+		private void sendData(params byte [][] data)
 		{
 			try
 			{
-				conn.stream.Write(data, 0, data.Length);
+				lock (conn.stream)
+					foreach (byte [] dat in data)
+						conn.stream.Write(dat, 0, dat.Length);
 			}
 			catch // ToDo: Close the connection
 			{
@@ -99,12 +101,11 @@ namespace Server
 				buddyHeader.DataType = Network.DataTypes.BuddyListUpdate;
 				buddyHeader.FromID = -1;
 				buddyHeader.ToID = conn.userID;
-			
+
 				byte[] buddyBytes = Network.BuddyListDataToBytes((Network.BuddyListData[])BuddyListData.ToArray(typeof(Network.BuddyListData)));
 
 				buddyHeader.Length = buddyBytes.Length;
-				sendData(Network.headerToBytes(buddyHeader));
-				sendData(buddyBytes);
+				sendData(Network.headerToBytes(buddyHeader), buddyBytes);
 
 				BuddyListData.Clear();
 			}
@@ -128,8 +129,7 @@ namespace Server
 			rand.NextBytes(randomCode);
 
 			// And send it to the client
-			sendData(Network.headerToBytes(sendHead));
-			sendData(randomCode);
+			sendData(Network.headerToBytes(sendHead), randomCode);
 
 			// Now loop forever
 			while (true)
@@ -181,8 +181,7 @@ namespace Server
 							{
 								if (((ServerNetwork.connection)ServerNetwork.netStreams[i]).userID == head.ToID)
 								{
-									((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.sendData(Network.headerToBytes(head));
-									((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.sendData(data);
+									((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.sendData(Network.headerToBytes(head), data);
 								}
 							}
 							break;
@@ -209,8 +208,7 @@ namespace Server
 								confirmHead.ToID = conn.userID;
 
 								// Send the Login OK message to let the client know they're authenticated
-								sendData(Network.headerToBytes(confirmHead));
-								sendData(BitConverter.GetBytes(Network.LoginOK));
+								sendData(Network.headerToBytes(confirmHead), BitConverter.GetBytes(Network.LoginOK));
 								loggedIn = true;
 
 								// Let everyone know that the user is now online
@@ -221,8 +219,7 @@ namespace Server
 							else
 							{ // Login failed
 								confirmHead.ToID = 0;
-								sendData(Network.headerToBytes(confirmHead));
-								sendData(BitConverter.GetBytes(Network.LoginBad));
+								sendData(Network.headerToBytes(confirmHead), BitConverter.GetBytes(Network.LoginBad));
 							}
 							break;
 						default:
