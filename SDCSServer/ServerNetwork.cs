@@ -149,7 +149,10 @@ namespace Server
 
 			for (int i = 0; i < netStreams.Count; i++)
 			{
-				attachBuddyListData((connection)netStreams[i], bld);
+				lock (((connection)netStreams[i]).watchingClass.BuddyListData)
+				{
+					((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
+				}
 			}
 		}
 
@@ -166,23 +169,11 @@ namespace Server
 				bld.username = budCon.username;
 				bld.userState = budCon.userState;
 
-				attachBuddyListData(con, bld);
+				lock (con.watchingClass.BuddyListData)
+				{
+					con.watchingClass.BuddyListData.Add(bld);
+				}
 			}
-		}
-
-		/// <summary>
-		/// Attaches buddylist data to a connection watcher.
-		/// </summary>
-		/// <param name="con">The connection to attach to</param>
-		/// <param name="bld">The data to attach</param>
-		private static void attachBuddyListData(connection con, SDCSCommon.Network.BuddyListData bld)
-		{
-			con.watchingClass.AddingBuddyListData = true;
-			while (con.watchingClass.SendingBuddyListData)
-			{}
-			con.watchingClass.BuddyListData.Add(bld);
-			con.watchingClass.BuddyListDataWaiting = true;
-			con.watchingClass.AddingBuddyListData = false;
 		}
 	}
 }

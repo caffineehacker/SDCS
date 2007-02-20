@@ -24,28 +24,6 @@ namespace Server
 		private bool loggedIn = false;
 
 		/// <summary>
-		/// Set to true to signal the thread that buddy list data is waiting.
-		/// </summary>
-		public bool BuddyListDataWaiting = false;
-
-		private bool sendingBuddyListData = false;
-		/// <summary>
-		/// Wait until this turns to false before adding data to the buddy list data array
-		/// </summary>
-		public bool SendingBuddyListData
-		{
-			get
-			{
-				return sendingBuddyListData;
-			}
-		}
-
-		/// <summary>
-		/// Set to true while adding data to the buddy list array. Only add data when sendingBuddyListData is false
-		/// </summary>
-		public bool AddingBuddyListData = false;
-
-		/// <summary>
 		/// Add new buddy list data here. Only add objects of the type BuddyListData and only add data after setting AddingBuddyListData to true.
 		/// </summary>
 		public ArrayList BuddyListData = new ArrayList();
@@ -80,7 +58,6 @@ namespace Server
 			ServerNetwork.notifyBuddyStatus(conn.userID, conn.username, Network.UserState.Offline);
 			conn.userID = 0;
 			conn.username = "";
-			sendingBuddyListData = false;
 
 			ServerNetwork.netStreams.Remove(conn);
 		}
@@ -116,33 +93,21 @@ namespace Server
 		private void sendBuddyListData()
 		{
 			// This code effectively creates a semephore
-			sendingBuddyListData = true;
-			while (AddingBuddyListData || SendingBuddyListData == false)
+			lock (BuddyListData)
 			{
-				if (ServerNetwork.ShuttingDown)
-					return;
-				if (SendingBuddyListData)
-					sendingBuddyListData = false;
-				else
-					sendingBuddyListData = true;
-				Thread.Sleep(0);
-			}
-
-			Network.Header buddyHeader = new Network.Header();
-			buddyHeader.DataType = Network.DataTypes.BuddyListUpdate;
-			buddyHeader.FromID = -1;
-			buddyHeader.ToID = conn.userID;
+				Network.Header buddyHeader = new Network.Header();
+				buddyHeader.DataType = Network.DataTypes.BuddyListUpdate;
+				buddyHeader.FromID = -1;
+				buddyHeader.ToID = conn.userID;
 			
-			byte[] buddyBytes = Network.BuddyListDataToBytes((Network.BuddyListData[])BuddyListData.ToArray(typeof(Network.BuddyListData)));
+				byte[] buddyBytes = Network.BuddyListDataToBytes((Network.BuddyListData[])BuddyListData.ToArray(typeof(Network.BuddyListData)));
 
-			buddyHeader.Length = buddyBytes.Length;
-			sendData(Network.headerToBytes(buddyHeader));
-			sendData(buddyBytes);
+				buddyHeader.Length = buddyBytes.Length;
+				sendData(Network.headerToBytes(buddyHeader));
+				sendData(buddyBytes);
 
-			BuddyListData.Clear();
-			BuddyListDataWaiting = false;
-
-			sendingBuddyListData = false;
+				BuddyListData.Clear();
+			}
 		}
 
 		/// <summary>
@@ -175,9 +140,9 @@ namespace Server
 				{
 					if (ServerNetwork.ShuttingDown)
                         return;
-					if (BuddyListDataWaiting)
+					if (BuddyListData.Count != 0)
 						sendBuddyListData();
-					Thread.Sleep(100);
+					Thread.Sleep(0);
 				}
 
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
