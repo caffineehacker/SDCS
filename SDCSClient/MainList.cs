@@ -148,7 +148,13 @@ namespace Client
 					}
 					break;
 				case Network.DataTypes.InstantMessage:
-					MessageBox.Show(System.Text.UnicodeEncoding.Unicode.GetString(e.Data));
+					foreach (Network.BuddyListData buddyDat in lstBuddyList.Items)
+						if (buddyDat.userID == e.Header.FromID)
+						{
+							createIMWindow(buddyDat, false);
+							((IMForm)buddyDat.Tag).recIM(System.Text.UnicodeEncoding.Unicode.GetString(e.Data));
+						}
+
 					break;
 			}
 		}
@@ -158,13 +164,29 @@ namespace Client
 			if ( lstBuddyList.SelectedItem != null )
 			{
 				Network.BuddyListData buddyData = (Network.BuddyListData)lstBuddyList.SelectedItem ;
-				if ( buddyData.Tag == null )
-				{
-					IMForm IMWindow = new IMForm(buddyData.userID, buddyData.username) ;
-					buddyData.Tag = IMWindow;
-					IMWindow.Show();
-				}
+				createIMWindow(buddyData, true);
 			}
+		}
+
+		private delegate void createIMWindowDelegate(Network.BuddyListData bld, bool activate);
+		/// <summary>
+		/// Create an IM Window or activate one if it already exists
+		/// </summary>
+		/// <param name="bld">The buddy list data to make the window for</param>
+		/// <param name="activate">If true the window will be activated, else it will only be activated if it is new</param>
+		private void createIMWindow(Network.BuddyListData bld, bool activate)
+		{
+			if (InvokeRequired)
+				this.Invoke(new createIMWindowDelegate(this.createIMWindow), new object[] {bld, activate});
+			if ( bld.Tag == null )
+			{
+				IMForm IMWindow = new IMForm(bld);
+				bld.Tag = IMWindow;
+				IMWindow.Show();
+			}
+			
+			if (activate)
+				((IMForm)bld.Tag).Activate();
 		}
 	}
 }

@@ -11,8 +11,7 @@ namespace Client
 	/// </summary>
 	public class IMForm : System.Windows.Forms.Form
 	{
-		private int userID;
-		private string userName;
+		private SDCSCommon.Network.BuddyListData buddyData;
 		private System.Windows.Forms.Button SendBtn;
 		private System.Windows.Forms.TextBox imHistBox;
 		private System.Windows.Forms.TextBox imTypeBox;
@@ -30,11 +29,8 @@ namespace Client
 		/// <summary>
 		/// constructor of IMForm
 		/// </summary>
-		public IMForm(int userid, string username)
+		public IMForm(SDCSCommon.Network.BuddyListData bld)
 		{
-			userID = userid;
-			userName = username;
-
 			//
 			// Required for Windows Form Designer support
 			//
@@ -43,11 +39,13 @@ namespace Client
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
+
+			buddyData = bld;
 		}
 
 		public void recIM(string message)
 		{
-			imHistBox.Text += userID + ": " + message + "\r\n";
+			imHistBox.Text += buddyData.username + ": " + message + "\r\n";
 		}
 
 
@@ -57,6 +55,7 @@ namespace Client
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
+			buddyData.Tag = null;
 			if( disposing )
 			{
 				if(components != null)
@@ -178,7 +177,6 @@ namespace Client
 		/// <param name="e"></param>
 		private void ExitMenuItem_Click(object sender, System.EventArgs e)
 		{
-
 			this.Dispose();
 		}
 
@@ -189,7 +187,7 @@ namespace Client
 		/// <param name="e"></param>
 		private void SendBtn_Click(object sender, System.EventArgs e)
 		{
-			ClientNetwork.SendIM(userID, imTypeBox.Text);
+			ClientNetwork.SendIM(buddyData.userID, imTypeBox.Text);
 			imHistBox.Text += ClientNetwork.Username + ": " + imTypeBox.Text + "\r\n";
 
 			imTypeBox.Text = "";
@@ -203,8 +201,7 @@ namespace Client
 		/// <param name="e"></param>
 		private void IMForm_Load(object sender, System.EventArgs e)
 		{
-			this.Text = userName;
+			this.Text = buddyData.username;
 		}
-
 	}
 }
