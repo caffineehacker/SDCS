@@ -133,33 +133,36 @@ namespace Client
 		{
 			if (InvokeRequired)
 				this.Invoke(new ClientNetwork_DataReceivedDelegate(ClientNetwork_DataReceived), new object[] {sender, e});
-			switch (e.Header.DataType)
+			else
 			{
-				case Network.DataTypes.BuddyListUpdate:
-					Network.BuddyListData[] bld = Network.BytesToBuddyListData(e.Data);
-					foreach (Network.BuddyListData bd in bld)
-					{
-						for ( int i = 0 ; i < lstBuddyList.Items.Count; i++ )
+				switch (e.Header.DataType)
+				{
+					case Network.DataTypes.BuddyListUpdate:
+						Network.BuddyListData[] bld = Network.BytesToBuddyListData(e.Data);
+						foreach (Network.BuddyListData bd in bld)
 						{
-							if (((Network.BuddyListData)lstBuddyList.Items[i]).userID == bd.userID)
+							for ( int i = 0 ; i < lstBuddyList.Items.Count; i++ )
 							{
-								lstBuddyList.Items.RemoveAt(i);
-								i = lstBuddyList.Items.Count;
+								if (((Network.BuddyListData)lstBuddyList.Items[i]).userID == bd.userID)
+								{
+									lstBuddyList.Items.RemoveAt(i);
+									i = lstBuddyList.Items.Count;
+								}
 							}
+							if (bd.userState == SDCSCommon.Network.UserState.Online)
+								lstBuddyList.Items.Add(bd);
 						}
-						if (bd.userState == SDCSCommon.Network.UserState.Online)
-							lstBuddyList.Items.Add(bd);
-					}
-					break;
-				case Network.DataTypes.InstantMessage:
-					foreach (Network.BuddyListData buddyDat in lstBuddyList.Items)
-						if (buddyDat.userID == e.Header.FromID)
-						{
-							createIMWindow(buddyDat, false);
-							((IMForm)buddyDat.Tag).recIM(System.Text.UnicodeEncoding.Unicode.GetString(e.Data));
-						}
+						break;
+					case Network.DataTypes.InstantMessage:
+						foreach (Network.BuddyListData buddyDat in lstBuddyList.Items)
+							if (buddyDat.userID == e.Header.FromID)
+							{
+								createIMWindow(buddyDat, false);
+								((IMForm)buddyDat.Tag).recIM(System.Text.UnicodeEncoding.Unicode.GetString(e.Data));
+							}
 
-					break;
+						break;
+				}
 			}
 		}
 
