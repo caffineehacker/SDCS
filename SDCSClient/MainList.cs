@@ -121,12 +121,18 @@ namespace Client
 		}
 
 		/// <summary>
+		/// This is to make sure all of this code executes on the main thread
+		/// </summary>
+		private delegate void ClientNetwork_DataReceivedDelegate(object sender, DataReceivedEventArgs e);
+		/// <summary>
 		/// Message pump for the network
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void ClientNetwork_DataReceived(object sender, DataReceivedEventArgs e)
 		{
+			if (InvokeRequired)
+				this.Invoke(new ClientNetwork_DataReceivedDelegate(ClientNetwork_DataReceived), new object[] {sender, e});
 			switch (e.Header.DataType)
 			{
 				case Network.DataTypes.BuddyListUpdate:
@@ -166,7 +172,6 @@ namespace Client
 			}
 		}
 
-		private delegate void createIMWindowDelegate(Network.BuddyListData bld, bool activate);
 		/// <summary>
 		/// Create an IM Window or activate one if it already exists
 		/// </summary>
@@ -174,8 +179,6 @@ namespace Client
 		/// <param name="activate">If true the window will be activated, else it will only be activated if it is new</param>
 		private void createIMWindow(Network.BuddyListData bld, bool activate)
 		{
-			if (InvokeRequired)
-				this.Invoke(new createIMWindowDelegate(this.createIMWindow), new object[] {bld, activate});
 			if ( bld.Tag == null )
 			{
 				IMForm IMWindow = new IMForm(bld);
