@@ -56,7 +56,7 @@ namespace Client
 		/// <summary>
 		/// The IPAddress or host name of the server. The default will connect to the main host though this should be different for each company/organization
 		/// </summary>
-		public static string IPAddress = "localhost";
+		public static string IPAddress = "sdcscvs.getmyip.com";
 
 		/// <summary>
 		/// The remote host's port to connect to. By default this is set to 3000 and shouldn't be changed unless conflicting with other software

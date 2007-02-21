@@ -133,8 +133,6 @@ namespace Client
 					Network.BuddyListData[] bld = Network.BytesToBuddyListData(e.Data);
 					foreach (Network.BuddyListData bd in bld)
 					{
-						
-						MessageBox.Show("User " + bd.username + " is now user ID " + bd.userID.ToString());
 						for ( int i = 0 ; i < lstBuddyList.Items.Count; i++ )
 						{
 							if (((Network.BuddyListData)lstBuddyList.Items[i]).userID == bd.userID)

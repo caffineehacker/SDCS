@@ -90,9 +90,9 @@ namespace Client
 			this.SendBtn.BackColor = System.Drawing.SystemColors.Control;
 			this.SendBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.SendBtn.Image = ((System.Drawing.Image)(resources.GetObject("SendBtn.Image")));
-			this.SendBtn.Location = new System.Drawing.Point(272, 296);
+			this.SendBtn.Location = new System.Drawing.Point(227, 257);
 			this.SendBtn.Name = "SendBtn";
-			this.SendBtn.Size = new System.Drawing.Size(96, 80);
+			this.SendBtn.Size = new System.Drawing.Size(80, 69);
 			this.SendBtn.TabIndex = 0;
 			this.SendBtn.Click += new System.EventHandler(this.SendBtn_Click);
 			// 
@@ -102,8 +102,11 @@ namespace Client
 			this.imHistBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
 			this.imHistBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.imHistBox.Location = new System.Drawing.Point(0, 0);
+			this.imHistBox.Multiline = true;
 			this.imHistBox.Name = "imHistBox";
-			this.imHistBox.Size = new System.Drawing.Size(368, 296);
+			this.imHistBox.ReadOnly = true;
+			this.imHistBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.imHistBox.Size = new System.Drawing.Size(307, 257);
 			this.imHistBox.TabIndex = 1;
 			this.imHistBox.Text = "";
 			// 
@@ -111,9 +114,9 @@ namespace Client
 			// 
 			this.imTypeBox.AutoSize = false;
 			this.imTypeBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.imTypeBox.Location = new System.Drawing.Point(0, 296);
+			this.imTypeBox.Location = new System.Drawing.Point(0, 257);
 			this.imTypeBox.Name = "imTypeBox";
-			this.imTypeBox.Size = new System.Drawing.Size(272, 80);
+			this.imTypeBox.Size = new System.Drawing.Size(227, 69);
 			this.imTypeBox.TabIndex = 2;
 			this.imTypeBox.Text = "";
 			// 
@@ -155,12 +158,12 @@ namespace Client
 			// 
 			// IMForm
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
-			this.ClientSize = new System.Drawing.Size(368, 374);
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(306, 324);
 			this.Controls.Add(this.imTypeBox);
 			this.Controls.Add(this.imHistBox);
 			this.Controls.Add(this.SendBtn);
-			this.Font = new System.Drawing.Font("Elephant", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.Menu = this.mainMenu1;
 			this.Name = "IMForm";
 			this.Text = "WhoIAmTalkingTo";
