@@ -80,7 +80,7 @@ namespace Client
 			this.cancelButton.Location = new System.Drawing.Point(32, 80);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(112, 40);
-			this.cancelButton.TabIndex = 2;
+			this.cancelButton.TabIndex = 3;
 			this.cancelButton.Text = "Cancel";
 			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
 			// 
@@ -89,7 +89,7 @@ namespace Client
 			this.loginButton.Location = new System.Drawing.Point(168, 80);
 			this.loginButton.Name = "loginButton";
 			this.loginButton.Size = new System.Drawing.Size(112, 40);
-			this.loginButton.TabIndex = 3;
+			this.loginButton.TabIndex = 2;
 			this.loginButton.Text = "Login";
 			this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
 			// 
@@ -108,7 +108,7 @@ namespace Client
 			this.passwordTextBox.Name = "passwordTextBox";
 			this.passwordTextBox.PasswordChar = '*';
 			this.passwordTextBox.Size = new System.Drawing.Size(200, 20);
-			this.passwordTextBox.TabIndex = 5;
+			this.passwordTextBox.TabIndex = 1;
 			this.passwordTextBox.Text = "";
 			// 
 			// PasswordLabel

@@ -78,14 +78,11 @@ namespace Client
 			// 
 			// lstBuddyList
 			// 
-			this.lstBuddyList.Items.AddRange(new object[] {
-															  "This",
-															  "is a",
-															  "test"});
 			this.lstBuddyList.Location = new System.Drawing.Point(8, 16);
 			this.lstBuddyList.Name = "lstBuddyList";
 			this.lstBuddyList.Size = new System.Drawing.Size(216, 654);
 			this.lstBuddyList.TabIndex = 0;
+			this.lstBuddyList.DoubleClick += new System.EventHandler(this.lstBuddyList_DoubleClick);
 			// 
 			// mainMenu1
 			// 
@@ -118,18 +115,9 @@ namespace Client
 		}
 		#endregion
 
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main() 
-		{
-			Application.Run(new frmClient());
-		}
-
 		private void mnuExit_Click(object sender, System.EventArgs e)
 		{
-			Application.Exit();
+			System.Windows.Forms.Application.Exit();
 		}
 
 		/// <summary>
@@ -144,9 +132,28 @@ namespace Client
 				case Network.DataTypes.BuddyListUpdate:
 					Network.BuddyListData[] bld = Network.BytesToBuddyListData(e.Data);
 					foreach (Network.BuddyListData bd in bld)
+					{
+						
 						MessageBox.Show("User " + bd.username + " is now user ID " + bd.userID.ToString());
+						for ( int i = 0 ; i < lstBuddyList.Items.Count; i++ )
+						{
+							if (((Network.BuddyListData)lstBuddyList.Items[i]).userID == bd.userID)
+							{
+								lstBuddyList.Items.RemoveAt(i);
+								i = lstBuddyList.Items.Count;
+							}
+						}
+						if (bd.userState == SDCSCommon.Network.UserState.Online)
+							lstBuddyList.Items.Add(bd);
+					}
+
 					break;
 			}
+		}
+
+		private void lstBuddyList_DoubleClick(object sender, System.EventArgs e)
+		{
+		
 		}
 	}
 }
