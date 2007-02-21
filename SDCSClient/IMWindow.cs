@@ -47,7 +47,7 @@ namespace Client
 
 		public void recIM(string message)
 		{
-			imHistBox.Text += (userID + ": " + message);
+			imHistBox.Text += (userID + ": " + message + "\r\n" );
 		}
 
 
@@ -190,7 +190,7 @@ namespace Client
 		private void SendBtn_Click(object sender, System.EventArgs e)
 		{
 			ClientNetwork.SendIM(userID, imTypeBox.Text);
-			imHistBox.Text += (ClientNetwork.Username + ": " + imTypeBox.Text);
+			imHistBox.Text += (ClientNetwork.Username + ": " + imTypeBox.Text + "\r\n" );
 
 			imTypeBox.Text = "";
 
