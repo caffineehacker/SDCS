@@ -164,7 +164,8 @@ namespace Client
 			this.Font = new System.Drawing.Font("Elephant", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.Menu = this.mainMenu1;
 			this.Name = "IMForm";
-			this.Text = "Form1";
+			this.Text = "WhoIAmTalkingTo";
+			this.Load += new System.EventHandler(this.IMForm_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -193,6 +194,16 @@ namespace Client
 
 			imTypeBox.Text = "";
 
+		}
+
+		/// <summary>
+		/// Occurs when IM window is shown
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void IMForm_Load(object sender, System.EventArgs e)
+		{
+			this.Text = userName;
 		}
 
 	}
