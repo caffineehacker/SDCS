@@ -146,14 +146,25 @@ namespace Client
 						if (bd.userState == SDCSCommon.Network.UserState.Online)
 							lstBuddyList.Items.Add(bd);
 					}
-
+					break;
+				case Network.DataTypes.InstantMessage:
+					MessageBox.Show(System.Text.UnicodeEncoding.Unicode.GetString(e.Data));
 					break;
 			}
 		}
 
 		private void lstBuddyList_DoubleClick(object sender, System.EventArgs e)
 		{
-		
+			if ( lstBuddyList.SelectedItem != null )
+			{
+				Network.BuddyListData buddyData = (Network.BuddyListData)lstBuddyList.SelectedItem ;
+				if ( buddyData.Tag == null )
+				{
+					IMForm IMWindow = new IMForm(buddyData.userID, buddyData.username) ;
+					buddyData.Tag = IMWindow;
+					IMWindow.Show();
+				}
+			}
 		}
 	}
 }

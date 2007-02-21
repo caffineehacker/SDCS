@@ -124,6 +124,11 @@ namespace SDCSCommon
 			public UserState userState;
 
 			/// <summary>
+			/// A generic object for misc data
+			/// </summary>
+			public object Tag = null;
+
+			/// <summary>
 			/// Returns the username of this buddy
 			/// </summary>
 			/// <returns>This buddy's username</returns>
