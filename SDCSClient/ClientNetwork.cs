@@ -105,7 +105,7 @@ namespace Client
 		/// <summary>
 		/// Connects to the server and then logs you in
 		/// </summary>
-		/// <param name="username">The user's username</param>
+		/// <param name="un">The user's username</param>
 		/// <param name="password">The user's password</param>
 		/// <returns>True if the login is successful, false otherwise</returns>
 		/// <example><code>if (!ClientNetwork.logInToServer("Username", "Password"))
@@ -286,7 +286,7 @@ namespace Client
 			while (true)
 			{
 				while (connectionStream.DataAvailable != true)
-				{Thread.Sleep(0);
+				{Thread.Sleep(100);
 					if (connected == false)
 						return;
 				}
@@ -296,7 +296,7 @@ namespace Client
 				for (int i = 0; i < Network.HEADER_SIZE; i++)
 				{
 					while (connectionStream.DataAvailable != true)
-					{Thread.Sleep(0);
+					{Thread.Sleep(100);
 						if (connected == false)
 							return;
 					}
@@ -310,7 +310,7 @@ namespace Client
 				for (int i = 0; i < head.Length; i++)
 				{
 					while (connectionStream.DataAvailable != true)
-					{Thread.Sleep(0);
+					{Thread.Sleep(100);
 						if (connected == false)
 							return;
 					}
@@ -325,7 +325,7 @@ namespace Client
 				DataReceived(null, eventArgs);
 
 				// Sleep to let other threads do their thing
-				Thread.Sleep(0);
+				Thread.Sleep(100);
 			}
 		}
 	}

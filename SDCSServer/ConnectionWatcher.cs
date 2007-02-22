@@ -142,7 +142,7 @@ namespace Server
                         return;
 					if (BuddyListData.Count != 0)
 						sendBuddyListData();
-					Thread.Sleep(0);
+					Thread.Sleep(100);
 				}
 
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
