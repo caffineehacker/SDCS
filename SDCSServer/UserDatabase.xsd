@@ -37,6 +37,12 @@
 							<xs:element name="Password" type="xs:string" minOccurs="0" />
 							<xs:element name="UserID" type="xs:int" minOccurs="0" />
 							<xs:element name="Username" type="xs:string" minOccurs="0" />
+							<xs:element name="Fax_x0020_Number" type="xs:string" minOccurs="0" />
+							<xs:element name="Optional_x0020_1_x0020_Name" type="xs:string" minOccurs="0" />
+							<xs:element name="Optional_x0020_1_x0020_Data" type="xs:string" minOccurs="0" />
+							<xs:element name="Optional_x0020_2_x0020_Name" type="xs:string" minOccurs="0" />
+							<xs:element name="Optional_x0020_2_x0020_Data" type="xs:string" minOccurs="0" />
+							<xs:element name="Message" type="xs:string" minOccurs="0" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

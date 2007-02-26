@@ -709,6 +709,18 @@ namespace Server {
             
             private DataColumn columnUsername;
             
+            private DataColumn columnFax_Number;
+            
+            private DataColumn columnOptional_1_Name;
+            
+            private DataColumn columnOptional_1_Data;
+            
+            private DataColumn columnOptional_2_Name;
+            
+            private DataColumn columnOptional_2_Data;
+            
+            private DataColumn columnMessage;
+            
             internal UserDataDataTable() : 
                     base("UserData") {
                 this.InitClass();
@@ -815,6 +827,42 @@ namespace Server {
                 }
             }
             
+            internal DataColumn Fax_NumberColumn {
+                get {
+                    return this.columnFax_Number;
+                }
+            }
+            
+            internal DataColumn Optional_1_NameColumn {
+                get {
+                    return this.columnOptional_1_Name;
+                }
+            }
+            
+            internal DataColumn Optional_1_DataColumn {
+                get {
+                    return this.columnOptional_1_Data;
+                }
+            }
+            
+            internal DataColumn Optional_2_NameColumn {
+                get {
+                    return this.columnOptional_2_Name;
+                }
+            }
+            
+            internal DataColumn Optional_2_DataColumn {
+                get {
+                    return this.columnOptional_2_Data;
+                }
+            }
+            
+            internal DataColumn MessageColumn {
+                get {
+                    return this.columnMessage;
+                }
+            }
+            
             public UserDataRow this[int index] {
                 get {
                     return ((UserDataRow)(this.Rows[index]));
@@ -833,7 +881,26 @@ namespace Server {
                 this.Rows.Add(row);
             }
             
-            public UserDataRow AddUserDataRow(string First_Name, string Last_Name, string Address1, string Address2, string City, string State, string Zip_Code, string Web_Site, string Phone, string Mobile_Phone, string Password, UsersRow parentUsersRowByUsersUserData, string Username) {
+            public UserDataRow AddUserDataRow(
+                        string First_Name, 
+                        string Last_Name, 
+                        string Address1, 
+                        string Address2, 
+                        string City, 
+                        string State, 
+                        string Zip_Code, 
+                        string Web_Site, 
+                        string Phone, 
+                        string Mobile_Phone, 
+                        string Password, 
+                        UsersRow parentUsersRowByUsersUserData, 
+                        string Username, 
+                        string Fax_Number, 
+                        string Optional_1_Name, 
+                        string Optional_1_Data, 
+                        string Optional_2_Name, 
+                        string Optional_2_Data, 
+                        string Message) {
                 UserDataRow rowUserDataRow = ((UserDataRow)(this.NewRow()));
                 rowUserDataRow.ItemArray = new object[] {
                         First_Name,
@@ -848,7 +915,13 @@ namespace Server {
                         Mobile_Phone,
                         Password,
                         parentUsersRowByUsersUserData[0],
-                        Username};
+                        Username,
+                        Fax_Number,
+                        Optional_1_Name,
+                        Optional_1_Data,
+                        Optional_2_Name,
+                        Optional_2_Data,
+                        Message};
                 this.Rows.Add(rowUserDataRow);
                 return rowUserDataRow;
             }
@@ -886,6 +959,12 @@ namespace Server {
                 this.columnPassword = this.Columns["Password"];
                 this.columnUserID = this.Columns["UserID"];
                 this.columnUsername = this.Columns["Username"];
+                this.columnFax_Number = this.Columns["Fax Number"];
+                this.columnOptional_1_Name = this.Columns["Optional 1 Name"];
+                this.columnOptional_1_Data = this.Columns["Optional 1 Data"];
+                this.columnOptional_2_Name = this.Columns["Optional 2 Name"];
+                this.columnOptional_2_Data = this.Columns["Optional 2 Data"];
+                this.columnMessage = this.Columns["Message"];
             }
             
             private void InitClass() {
@@ -915,6 +994,18 @@ namespace Server {
                 this.Columns.Add(this.columnUserID);
                 this.columnUsername = new DataColumn("Username", typeof(string), null, System.Data.MappingType.Element);
                 this.Columns.Add(this.columnUsername);
+                this.columnFax_Number = new DataColumn("Fax Number", typeof(string), null, System.Data.MappingType.Element);
+                this.Columns.Add(this.columnFax_Number);
+                this.columnOptional_1_Name = new DataColumn("Optional 1 Name", typeof(string), null, System.Data.MappingType.Element);
+                this.Columns.Add(this.columnOptional_1_Name);
+                this.columnOptional_1_Data = new DataColumn("Optional 1 Data", typeof(string), null, System.Data.MappingType.Element);
+                this.Columns.Add(this.columnOptional_1_Data);
+                this.columnOptional_2_Name = new DataColumn("Optional 2 Name", typeof(string), null, System.Data.MappingType.Element);
+                this.Columns.Add(this.columnOptional_2_Name);
+                this.columnOptional_2_Data = new DataColumn("Optional 2 Data", typeof(string), null, System.Data.MappingType.Element);
+                this.Columns.Add(this.columnOptional_2_Data);
+                this.columnMessage = new DataColumn("Message", typeof(string), null, System.Data.MappingType.Element);
+                this.Columns.Add(this.columnMessage);
                 this.Constraints.Add(new UniqueConstraint("UserDataKey", new DataColumn[] {
                                 this.columnUsername}, true));
                 this.columnUsername.AllowDBNull = false;
@@ -1153,6 +1244,90 @@ namespace Server {
                 }
             }
             
+            public string Fax_Number {
+                get {
+                    try {
+                        return ((string)(this[this.tableUserData.Fax_NumberColumn]));
+                    }
+                    catch (InvalidCastException e) {
+                        throw new StrongTypingException("Cannot get value because it is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableUserData.Fax_NumberColumn] = value;
+                }
+            }
+            
+            public string Optional_1_Name {
+                get {
+                    try {
+                        return ((string)(this[this.tableUserData.Optional_1_NameColumn]));
+                    }
+                    catch (InvalidCastException e) {
+                        throw new StrongTypingException("Cannot get value because it is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableUserData.Optional_1_NameColumn] = value;
+                }
+            }
+            
+            public string Optional_1_Data {
+                get {
+                    try {
+                        return ((string)(this[this.tableUserData.Optional_1_DataColumn]));
+                    }
+                    catch (InvalidCastException e) {
+                        throw new StrongTypingException("Cannot get value because it is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableUserData.Optional_1_DataColumn] = value;
+                }
+            }
+            
+            public string Optional_2_Name {
+                get {
+                    try {
+                        return ((string)(this[this.tableUserData.Optional_2_NameColumn]));
+                    }
+                    catch (InvalidCastException e) {
+                        throw new StrongTypingException("Cannot get value because it is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableUserData.Optional_2_NameColumn] = value;
+                }
+            }
+            
+            public string Optional_2_Data {
+                get {
+                    try {
+                        return ((string)(this[this.tableUserData.Optional_2_DataColumn]));
+                    }
+                    catch (InvalidCastException e) {
+                        throw new StrongTypingException("Cannot get value because it is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableUserData.Optional_2_DataColumn] = value;
+                }
+            }
+            
+            public string Message {
+                get {
+                    try {
+                        return ((string)(this[this.tableUserData.MessageColumn]));
+                    }
+                    catch (InvalidCastException e) {
+                        throw new StrongTypingException("Cannot get value because it is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableUserData.MessageColumn] = value;
+                }
+            }
+            
             public UsersRow UsersRow {
                 get {
                     return ((UsersRow)(this.GetParentRow(this.Table.ParentRelations["UsersUserData"])));
@@ -1256,6 +1431,54 @@ namespace Server {
             
             public void SetUserIDNull() {
                 this[this.tableUserData.UserIDColumn] = System.Convert.DBNull;
+            }
+            
+            public bool IsFax_NumberNull() {
+                return this.IsNull(this.tableUserData.Fax_NumberColumn);
+            }
+            
+            public void SetFax_NumberNull() {
+                this[this.tableUserData.Fax_NumberColumn] = System.Convert.DBNull;
+            }
+            
+            public bool IsOptional_1_NameNull() {
+                return this.IsNull(this.tableUserData.Optional_1_NameColumn);
+            }
+            
+            public void SetOptional_1_NameNull() {
+                this[this.tableUserData.Optional_1_NameColumn] = System.Convert.DBNull;
+            }
+            
+            public bool IsOptional_1_DataNull() {
+                return this.IsNull(this.tableUserData.Optional_1_DataColumn);
+            }
+            
+            public void SetOptional_1_DataNull() {
+                this[this.tableUserData.Optional_1_DataColumn] = System.Convert.DBNull;
+            }
+            
+            public bool IsOptional_2_NameNull() {
+                return this.IsNull(this.tableUserData.Optional_2_NameColumn);
+            }
+            
+            public void SetOptional_2_NameNull() {
+                this[this.tableUserData.Optional_2_NameColumn] = System.Convert.DBNull;
+            }
+            
+            public bool IsOptional_2_DataNull() {
+                return this.IsNull(this.tableUserData.Optional_2_DataColumn);
+            }
+            
+            public void SetOptional_2_DataNull() {
+                this[this.tableUserData.Optional_2_DataColumn] = System.Convert.DBNull;
+            }
+            
+            public bool IsMessageNull() {
+                return this.IsNull(this.tableUserData.MessageColumn);
+            }
+            
+            public void SetMessageNull() {
+                this[this.tableUserData.MessageColumn] = System.Convert.DBNull;
             }
         }
         
