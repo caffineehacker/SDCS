@@ -78,9 +78,10 @@ namespace Client
 			// 
 			// lstBuddyList
 			// 
-			this.lstBuddyList.Location = new System.Drawing.Point(8, 16);
+			this.lstBuddyList.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.lstBuddyList.Location = new System.Drawing.Point(0, 0);
 			this.lstBuddyList.Name = "lstBuddyList";
-			this.lstBuddyList.Size = new System.Drawing.Size(216, 654);
+			this.lstBuddyList.Size = new System.Drawing.Size(232, 732);
 			this.lstBuddyList.TabIndex = 0;
 			this.lstBuddyList.DoubleClick += new System.EventHandler(this.lstBuddyList_DoubleClick);
 			// 
