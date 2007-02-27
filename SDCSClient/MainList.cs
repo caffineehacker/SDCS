@@ -37,12 +37,6 @@ namespace Client
 			//
 
 			// Handler function for received network data
-			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(ClientNetwork_DataReceived);
-			LoginForm initialLogin = new LoginForm();
-            if (initialLogin.ShowDialog() != DialogResult.OK)
-				MessageBox.Show("Bad login");
-
-			this.Show();
 		}
 
 		/// <summary>
@@ -111,6 +105,7 @@ namespace Client
 			this.Menu = this.mainMenu1;
 			this.Name = "MainList";
 			this.Text = "People - SDCS";
+			this.Load += new System.EventHandler(this.MainList_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -192,6 +187,16 @@ namespace Client
 			
 			if (activate)
 				((IMForm)bld.Tag).Activate();
+		}
+
+		private void MainList_Load(object sender, System.EventArgs e)
+		{
+			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(ClientNetwork_DataReceived);
+			LoginForm initialLogin = new LoginForm();
+			if (initialLogin.ShowDialog() != DialogResult.OK)
+				this.Dispose();
+			else
+				this.Show();
 		}
 	}
 }
