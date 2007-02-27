@@ -21,6 +21,7 @@ namespace Client
 		private System.Windows.Forms.MenuItem menuItem3;
 		private System.Windows.Forms.MenuItem menuItem4;
 		private System.Windows.Forms.MenuItem ExitMenuItem;
+		private System.Windows.Forms.MenuItem timestamp;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -46,6 +47,8 @@ namespace Client
 		public void recIM(string message)
 		{
 			imHistBox.Text += buddyData.username + ": " + message + "\r\n";
+			this.Activate();
+
 		}
 
 
@@ -82,6 +85,7 @@ namespace Client
 			this.ExitMenuItem = new System.Windows.Forms.MenuItem();
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.menuItem3 = new System.Windows.Forms.MenuItem();
+			this.timestamp = new System.Windows.Forms.MenuItem();
 			this.menuItem4 = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
@@ -93,7 +97,7 @@ namespace Client
 			this.SendBtn.Location = new System.Drawing.Point(227, 257);
 			this.SendBtn.Name = "SendBtn";
 			this.SendBtn.Size = new System.Drawing.Size(80, 69);
-			this.SendBtn.TabIndex = 0;
+			this.SendBtn.TabIndex = 1;
 			this.SendBtn.Click += new System.EventHandler(this.SendBtn_Click);
 			// 
 			// imHistBox
@@ -107,18 +111,20 @@ namespace Client
 			this.imHistBox.ReadOnly = true;
 			this.imHistBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.imHistBox.Size = new System.Drawing.Size(307, 257);
-			this.imHistBox.TabIndex = 1;
+			this.imHistBox.TabIndex = 99;
+			this.imHistBox.TabStop = false;
 			this.imHistBox.Text = "";
 			// 
 			// imTypeBox
 			// 
 			this.imTypeBox.AutoSize = false;
 			this.imTypeBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.imTypeBox.Location = new System.Drawing.Point(0, 257);
+			this.imTypeBox.Location = new System.Drawing.Point(0, 264);
 			this.imTypeBox.Name = "imTypeBox";
-			this.imTypeBox.Size = new System.Drawing.Size(227, 69);
-			this.imTypeBox.TabIndex = 2;
+			this.imTypeBox.Size = new System.Drawing.Size(227, 80);
+			this.imTypeBox.TabIndex = 0;
 			this.imTypeBox.Text = "";
+			this.imTypeBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.imTypeBox_KeyPress);
 			// 
 			// mainMenu1
 			// 
@@ -149,7 +155,16 @@ namespace Client
 			// menuItem3
 			// 
 			this.menuItem3.Index = 2;
+			this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					  this.timestamp});
 			this.menuItem3.Text = "View";
+			// 
+			// timestamp
+			// 
+			this.timestamp.Index = 0;
+			this.timestamp.RadioCheck = true;
+			this.timestamp.Text = "Timestamp (on/off)";
+			this.timestamp.Click += new System.EventHandler(this.timestamp_Click);
 			// 
 			// menuItem4
 			// 
@@ -205,6 +220,17 @@ namespace Client
 		private void IMForm_Load(object sender, System.EventArgs e)
 		{
 			this.Text = buddyData.username;
+		}
+
+		private void timestamp_Click(object sender, System.EventArgs e)
+		{
+		
+		}
+
+		private void imTypeBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		{
+			if(e.KeyChar == 13)
+				SendBtn_Click(sender, (System.EventArgs)e);
 		}
 	}
 }
