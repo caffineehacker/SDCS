@@ -197,13 +197,11 @@ namespace Client
 			if (activate)
 				((IMForm)bld.Tag).Activate();
 		}
-<<<<<<< .mine
 
 		private void menuItem1_Click(object sender, System.EventArgs e)
 		{
 		
 		}
-=======
 
 		private void MainList_Load(object sender, System.EventArgs e)
 		{
@@ -214,6 +212,5 @@ namespace Client
 			else
 				this.Show();
 		}
->>>>>>> .r76
 	}
 }
