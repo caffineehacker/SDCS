@@ -149,9 +149,11 @@ namespace Server
 				for (int i = 0; i < headerBuffer.Length; i++)
 				{
 					while (conn.stream.DataAvailable == false)
-					{if (frmServer.ShuttingDown)
-						 return;
-						Thread.Sleep(100);}
+					{
+						if (frmServer.ShuttingDown)
+							return;
+						Thread.Sleep(100);
+					}
 					headerBuffer[i] = (byte)conn.stream.ReadByte();
 				}
 
