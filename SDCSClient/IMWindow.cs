@@ -91,12 +91,13 @@ namespace Client
 			// 
 			// SendBtn
 			// 
+			this.SendBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.SendBtn.BackColor = System.Drawing.SystemColors.Control;
 			this.SendBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.SendBtn.Image = ((System.Drawing.Image)(resources.GetObject("SendBtn.Image")));
-			this.SendBtn.Location = new System.Drawing.Point(227, 257);
+			this.SendBtn.Location = new System.Drawing.Point(227, 256);
 			this.SendBtn.Name = "SendBtn";
-			this.SendBtn.Size = new System.Drawing.Size(80, 69);
+			this.SendBtn.Size = new System.Drawing.Size(80, 88);
 			this.SendBtn.TabIndex = 1;
 			this.SendBtn.Click += new System.EventHandler(this.SendBtn_Click);
 			// 
@@ -105,23 +106,26 @@ namespace Client
 			this.imHistBox.AutoSize = false;
 			this.imHistBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
 			this.imHistBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.imHistBox.Dock = System.Windows.Forms.DockStyle.Top;
 			this.imHistBox.Location = new System.Drawing.Point(0, 0);
 			this.imHistBox.Multiline = true;
 			this.imHistBox.Name = "imHistBox";
 			this.imHistBox.ReadOnly = true;
 			this.imHistBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.imHistBox.Size = new System.Drawing.Size(307, 257);
+			this.imHistBox.Size = new System.Drawing.Size(306, 248);
 			this.imHistBox.TabIndex = 99;
 			this.imHistBox.TabStop = false;
 			this.imHistBox.Text = "";
 			// 
 			// imTypeBox
 			// 
+			this.imTypeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.imTypeBox.AutoSize = false;
 			this.imTypeBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.imTypeBox.Location = new System.Drawing.Point(0, 264);
+			this.imTypeBox.Location = new System.Drawing.Point(0, 256);
 			this.imTypeBox.Name = "imTypeBox";
-			this.imTypeBox.Size = new System.Drawing.Size(227, 80);
+			this.imTypeBox.Size = new System.Drawing.Size(227, 88);
 			this.imTypeBox.TabIndex = 0;
 			this.imTypeBox.Text = "";
 			this.imTypeBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.imTypeBox_KeyPress);
