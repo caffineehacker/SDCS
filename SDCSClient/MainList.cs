@@ -17,6 +17,7 @@ namespace Client
 		private System.Windows.Forms.ListBox lstBuddyList;
 		private System.Windows.Forms.MenuItem mnuFile;
 		private System.Windows.Forms.MenuItem mnuExit;
+		private System.Windows.Forms.MenuItem menuItem1;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -68,6 +69,7 @@ namespace Client
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.mnuFile = new System.Windows.Forms.MenuItem();
 			this.mnuExit = new System.Windows.Forms.MenuItem();
+			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// lstBuddyList
@@ -88,14 +90,21 @@ namespace Client
 			// 
 			this.mnuFile.Index = 0;
 			this.mnuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					this.menuItem1,
 																					this.mnuExit});
 			this.mnuFile.Text = "&File";
 			// 
 			// mnuExit
 			// 
-			this.mnuExit.Index = 0;
+			this.mnuExit.Index = 1;
 			this.mnuExit.Text = "E&xit";
 			this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
+			// 
+			// menuItem1
+			// 
+			this.menuItem1.Index = 0;
+			this.menuItem1.Text = "Logoff";
+			this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
 			// 
 			// MainList
 			// 
@@ -188,6 +197,13 @@ namespace Client
 			if (activate)
 				((IMForm)bld.Tag).Activate();
 		}
+<<<<<<< .mine
+
+		private void menuItem1_Click(object sender, System.EventArgs e)
+		{
+		
+		}
+=======
 
 		private void MainList_Load(object sender, System.EventArgs e)
 		{
@@ -198,5 +214,6 @@ namespace Client
 			else
 				this.Show();
 		}
+>>>>>>> .r76
 	}
 }
