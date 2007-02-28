@@ -155,12 +155,22 @@ namespace Client
 							{
 								if (((Network.BuddyListData)lstBuddyList.Items[i]).userID == bd.userID)
 								{
+									bd.Tag = ((Network.BuddyListData)lstBuddyList.Items[i]).Tag;
 									lstBuddyList.Items.RemoveAt(i);
 									i = lstBuddyList.Items.Count;
 								}
 							}
-							if (bd.userState == SDCSCommon.Network.UserState.Online)
-								lstBuddyList.Items.Add(bd);
+
+							switch (bd.userState)
+							{
+								case SDCSCommon.Network.UserState.Online:
+									lstBuddyList.Items.Add(bd);
+									break;
+								case SDCSCommon.Network.UserState.Offline:
+									bd.username = "Offline: " + bd.username;
+									lstBuddyList.Items.Add(bd);
+									break;
+							}
 						}
 						break;
 					case Network.DataTypes.InstantMessage:

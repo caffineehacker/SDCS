@@ -236,7 +236,7 @@ namespace Server
 								conn.username = username;
 
 								// Make sure we are only logged in from one place at a time
-								lock (ServerNetwork.netStreams)
+								lock (ServerNetwork.netStreams.SyncRoot)
 								{
 									for (int i = ServerNetwork.netStreams.Count - 1; i >= 0; i--)
 										if (((ServerNetwork.connection)ServerNetwork.netStreams[i]).userID == conn.userID && ((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.loggedIn)

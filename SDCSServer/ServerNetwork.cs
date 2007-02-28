@@ -77,15 +77,16 @@ namespace Server
 			catch
 			{}
 
-			for (int i = 0; i < netStreams.Count; i++)
-			{
-				try
+			lock (netStreams.SyncRoot)
+				for (int i = 0; i < netStreams.Count; i++)
 				{
-					((connection)netStreams[i]).watchingClass.Shutdown();
+					try
+					{
+						((connection)netStreams[i]).watchingClass.Shutdown();
+					}
+					catch
+					{}
 				}
-				catch
-				{}
-			}
 		}
 
 		/// <summary>
@@ -129,7 +130,8 @@ namespace Server
 				connection conn = new connection();
 				conn.userID = 0;
 				conn.stream = client.GetStream();
-				netStreams.Add(conn);
+				lock (netStreams.SyncRoot)
+					netStreams.Add(conn);
 				conn.watchingClass = new ConnectionWatcher(conn);
 			}
 		}
@@ -147,13 +149,14 @@ namespace Server
 			bld.username = username;
 			bld.userState = state;
 
-			for (int i = 0; i < netStreams.Count; i++)
-			{
-				lock (((connection)netStreams[i]).watchingClass.BuddyListData.SyncRoot)
+			lock (netStreams.SyncRoot)
+				for (int i = 0; i < netStreams.Count; i++)
 				{
-					((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
+					lock (((connection)netStreams[i]).watchingClass.BuddyListData.SyncRoot)
+					{
+						((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
+					}
 				}
-			}
 		}
 
 		/// <summary>
@@ -162,18 +165,19 @@ namespace Server
 		/// <param name="con">The connection this data should be sent to</param>
 		public static void refreshBuddyList(connection con)
 		{
-			foreach (connection budCon in netStreams)
-			{
-				SDCSCommon.Network.BuddyListData bld = new SDCSCommon.Network.BuddyListData();
-				bld.userID = budCon.userID;
-				bld.username = budCon.username;
-				bld.userState = budCon.userState;
-
-				lock (con.watchingClass.BuddyListData.SyncRoot)
+			lock (netStreams.SyncRoot)
+				foreach (connection budCon in netStreams)
 				{
-					con.watchingClass.BuddyListData.Add(bld);
+					SDCSCommon.Network.BuddyListData bld = new SDCSCommon.Network.BuddyListData();
+					bld.userID = budCon.userID;
+					bld.username = budCon.username;
+					bld.userState = budCon.userState;
+
+					lock (con.watchingClass.BuddyListData.SyncRoot)
+					{
+						con.watchingClass.BuddyListData.Add(bld);
+					}
 				}
-			}
 		}
 	}
 }
