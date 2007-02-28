@@ -173,6 +173,7 @@ namespace Client
 			// 
 			// LoginForm
 			// 
+			this.AcceptButton = this.loginButton;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(322, 155);
 			this.Controls.Add(this.loginFormStatusBar);
