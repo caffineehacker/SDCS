@@ -52,7 +52,7 @@ namespace Client
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
-			ClientNetwork.Disconnect();
+			ClientNetwork.Disconnect(false);
 			if( disposing )
 			{
 				if (components != null) 

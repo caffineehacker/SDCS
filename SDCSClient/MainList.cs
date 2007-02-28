@@ -46,7 +46,7 @@ namespace Client
 		protected override void Dispose( bool disposing )
 		{
 			// Need to kill the listening thread by disconnecting or the program will never exit
-			ClientNetwork.Disconnect();
+			ClientNetwork.Disconnect(false);
 
 			if( disposing )
 			{
@@ -182,6 +182,10 @@ namespace Client
 							}
 
 						break;
+					case Network.DataTypes.Logout: // ToDo: Clear IM Windows and the buddy list
+						MessageBox.Show("You have been logged out because: " + System.Text.UnicodeEncoding.Unicode.GetString(e.Data));
+						showLogin();
+						break;
 				}
 			}
 		}
@@ -249,7 +253,7 @@ namespace Client
 		/// <param name="e"></param>
 		private void logoffMainListMenuOption_Click(object sender, System.EventArgs e)
 		{
-			ClientNetwork.Disconnect();
+			ClientNetwork.Disconnect(false);
 			showLogin();
 		}
 	}

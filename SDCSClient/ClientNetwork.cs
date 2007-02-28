@@ -32,6 +32,20 @@ namespace Client
 		public delegate void DataReceivedDelegate(object sender, DataReceivedEventArgs e);
 
 		/// <summary>
+		/// The number of milliseconds to wait when reading data before declaring it a timeout
+		/// </summary>
+		const int MAX_READ_WAIT_TIME = 10000;
+		/// <summary>
+		/// The number of milliseconds between sending keep alive signals
+		/// </summary>
+		const int KEEP_ALIVE_TIME = 10000;
+
+		/// <summary>
+		/// Keeps track of the last time activity occured on this network connection
+		/// </summary>
+		private static System.DateTime lastActivity = System.DateTime.Now;
+
+		/// <summary>
 		/// This event is raised when new data is received from the server. <seealso cref="Client.ClientNetwork.DataReceivedDelegate"/> <seealso cref="Client.DataReceivedEventArgs"/>
 		/// </summary>
 		/// <example><code>
@@ -113,7 +127,7 @@ namespace Client
 		public static bool logInToServer(string un, string password)
 		{
 			// Close any existing connections
-			Disconnect();
+			Disconnect(false);
 
 			Network.Header head;
 			string randomCodeData = "";
@@ -169,10 +183,7 @@ namespace Client
 			byte[] usernameBytes = System.Text.UnicodeEncoding.Unicode.GetBytes(un);
 			sendHead.Length = passBytes.Length + usernameBytes.Length + 4;
 
-			connectionStream.Write(SDCSCommon.Network.headerToBytes(sendHead), 0, SDCSCommon.Network.HEADER_SIZE);
-			connectionStream.Write(BitConverter.GetBytes(usernameBytes.Length), 0, 4);
-			connectionStream.Write(usernameBytes, 0, usernameBytes.Length);
-			connectionStream.Write(passBytes,0,passBytes.Length);
+			SendData(SDCSCommon.Network.headerToBytes(sendHead), BitConverter.GetBytes(usernameBytes.Length), usernameBytes, passBytes);
 
 			byte[] statusHeader = new byte[Network.HEADER_SIZE];
 			for (int i = 0; i < Network.HEADER_SIZE; i++)
@@ -222,15 +233,8 @@ namespace Client
 		///		// Always call this before exiting the program
 		///		ClientNetwork.Disconnect();
 		///	}</code></example>
-		public static void Disconnect()
+		public static void Disconnect(bool forced)
 		{
-			try
-			{
-				// Try to kill the thread
-				listeningThread.Abort();
-			}
-			catch
-			{}
 			try
 			{
 				// Try to close the stream
@@ -240,6 +244,28 @@ namespace Client
 			{}
 			username = "";
 			connected = false;
+
+			if (forced)
+			{
+				Network.Header logoffHeader = new SDCSCommon.Network.Header();
+				logoffHeader.DataType = Network.DataTypes.Logout;
+				logoffHeader.Encrypted = false;
+				logoffHeader.Length = 0;
+
+				DataReceivedEventArgs e = new DataReceivedEventArgs();
+				e.Header = logoffHeader;
+				e.Data = System.Text.UnicodeEncoding.Unicode.GetBytes("Lost connection to server");
+
+				DataReceived(null, e);
+			}
+
+			try
+			{
+				// Try to kill the thread
+				listeningThread.Abort();
+			}
+			catch
+			{}
 		}
 
 		/// <summary>
@@ -256,25 +282,38 @@ namespace Client
 		/// }</code></example>
 		public static bool SendIM(int toID, string message)
 		{
-			if (connected)
-			{
-				Network.Header head = new Network.Header();
-				// FromID is set at the server
-				head.FromID = 0;
-				head.ToID = toID;
-				head.DataType = Network.DataTypes.InstantMessage;
+			Network.Header head = new Network.Header();
+			// FromID is set at the server
+			head.FromID = 0;
+			head.ToID = toID;
+			head.DataType = Network.DataTypes.InstantMessage;
 			
-				byte[] data = System.Text.UnicodeEncoding.Unicode.GetBytes(message);
-				head.Length = data.Length;
-				connectionStream.Write(Network.headerToBytes(head), 0, Network.HEADER_SIZE);
-				connectionStream.Write(data, 0, data.Length);
+			byte[] data = System.Text.UnicodeEncoding.Unicode.GetBytes(message);
+			head.Length = data.Length;
+			return SendData(Network.headerToBytes(head), data);
+		}
 
-				return true;
+		/// <summary>
+		/// Function for sending data to the server. All data being sent to the server should go through this function
+		/// </summary>
+		/// <param name="data">Takes an arbitrary number of byte arrays as data</param>
+		/// <returns>True if the sending is successful, false otherwise</returns>
+		public static bool SendData(params byte[][] data)
+		{
+			try
+			{
+				lock (connectionStream)
+					foreach (byte [] dat in data)
+						connectionStream.Write(dat, 0, dat.Length);
 			}
-			
-			// Disconnect from the server if the data can't be sent
-			Disconnect();
-			return false;
+			catch
+			{
+				Disconnect(true);
+				return false;
+			}
+
+			lastActivity = System.DateTime.Now;
+			return true;
 		}
 
 		/// <summary>
@@ -282,25 +321,36 @@ namespace Client
 		/// </summary>
 		private static void listeningFunc()
 		{
+			// Records the last time a byte was received so we can check for a read timeout
+			System.DateTime lastRead;
+
 			// Loop for the lifetime of the thread
 			while (true)
 			{
 				while (connectionStream.DataAvailable != true)
-				{Thread.Sleep(100);
+				{
 					if (connected == false)
 						return;
+					if (System.DateTime.Now - lastActivity > System.TimeSpan.FromMilliseconds(KEEP_ALIVE_TIME))
+						sendKeepAlive();
+					Thread.Sleep(100);
 				}
 
 				// Get the header
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
+				lastRead = System.DateTime.Now;
 				for (int i = 0; i < Network.HEADER_SIZE; i++)
 				{
 					while (connectionStream.DataAvailable != true)
-					{Thread.Sleep(100);
+					{
 						if (connected == false)
 							return;
+						if (System.DateTime.Now - lastRead > System.TimeSpan.FromMilliseconds(MAX_READ_WAIT_TIME))
+							Disconnect(true);
+						Thread.Sleep(100);
 					}
 					headerBuffer[i] = (byte)connectionStream.ReadByte();
+					lastRead = System.DateTime.Now;
 				}
 
 				// Get the data
@@ -310,11 +360,15 @@ namespace Client
 				for (int i = 0; i < head.Length; i++)
 				{
 					while (connectionStream.DataAvailable != true)
-					{Thread.Sleep(100);
+					{
 						if (connected == false)
 							return;
+						if (System.DateTime.Now - lastRead > System.TimeSpan.FromMilliseconds(MAX_READ_WAIT_TIME))
+							Disconnect(true);
+						Thread.Sleep(100);
 					}
 					data[i] = (byte)connectionStream.ReadByte();
+					lastRead = System.DateTime.Now;
 				}
 
 				// Raise the DataReceivedEvent to let the gui know new data has arrived
@@ -326,7 +380,23 @@ namespace Client
 
 				// Sleep to let other threads do their thing
 				Thread.Sleep(100);
+				lastActivity = System.DateTime.Now;
 			}
+		}
+
+		/// <summary>
+		/// Sends the keepAlive signal to check if the network connection is still active
+		/// </summary>
+		private static void sendKeepAlive()
+		{
+			Network.Header pingHead = new SDCSCommon.Network.Header();
+			pingHead.DataType = Network.DataTypes.Ping;
+			pingHead.Encrypted = false;
+			pingHead.FromID = 0;
+			pingHead.Length = 0;
+			pingHead.ToID = -1;
+
+			SendData(Network.headerToBytes(pingHead));
 		}
 	}
 }
