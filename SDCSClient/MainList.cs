@@ -201,11 +201,17 @@ namespace Client
 		private void menuItem1_Click(object sender, System.EventArgs e)
 		{
 			ClientNetwork.Disconnect();
-			// Add code to hide the main list.
+			showLogin();
 		}
 
 		private void MainList_Load(object sender, System.EventArgs e)
 		{
+			showLogin();
+		}
+
+		private void showLogin()
+		{
+			this.Hide();
 			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(ClientNetwork_DataReceived);
 			LoginForm initialLogin = new LoginForm();
 			if (initialLogin.ShowDialog() != DialogResult.OK)

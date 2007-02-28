@@ -10,6 +10,20 @@ namespace Server
 	/// </summary>
 	public class ConnectionWatcher
 	{
+		/// <summary>
+		/// The number of milliseconds to wait when reading data before declaring it a timeout
+		/// </summary>
+		const int MAX_READ_WAIT_TIME = 10000;
+		/// <summary>
+		/// The number of milliseconds between sending keep alive signals
+		/// </summary>
+		const int KEEP_ALIVE_TIME = 10000;
+
+		/// <summary>
+		/// Keeps track of the last time activity occured on this network connection
+		/// </summary>
+		private System.DateTime lastActivity = System.DateTime.Now;
+
 		private Thread watchingThread;
 		private ServerNetwork.connection conn;
 
@@ -43,23 +57,24 @@ namespace Server
 			loggedIn = false;
 			try
 			{
-				watchingThread.Abort();
-			}
-			catch
-			{}
-			try
-			{
 				conn.stream.Close();
 			}
 			catch
 			{
 			}
 
+			ServerNetwork.netStreams.Remove(conn);
 			ServerNetwork.notifyBuddyStatus(conn.userID, conn.username, Network.UserState.Offline);
+
 			conn.userID = 0;
 			conn.username = "";
 
-			ServerNetwork.netStreams.Remove(conn);
+			try
+			{
+				watchingThread.Abort();
+			}
+			catch
+			{}
 		}
 
 		/// <summary>
@@ -78,6 +93,8 @@ namespace Server
 			{
 				Shutdown();
 			}
+
+			lastActivity = System.DateTime.Now;
 		}
 
 		/// <summary>
@@ -116,6 +133,9 @@ namespace Server
 		/// </summary>
 		private void connectionWatcherFunc()
 		{
+			// Records the last time a byte was received so we can check for a read timeout
+			System.DateTime lastRead;
+
 			// First send the random code for the client
 			Network.Header sendHead = new SDCSCommon.Network.Header();
 			sendHead.DataType = Network.DataTypes.RandomPassCode;
@@ -142,19 +162,23 @@ namespace Server
                         return;
 					if (BuddyListData.Count != 0)
 						sendBuddyListData();
+					if (System.DateTime.Now - lastActivity > TimeSpan.FromMilliseconds(KEEP_ALIVE_TIME))
+						sendKeepAlive();
 					Thread.Sleep(100);
 				}
 
 				byte[] headerBuffer = new byte[Network.HEADER_SIZE];
+				lastRead = System.DateTime.Now;
 				for (int i = 0; i < headerBuffer.Length; i++)
 				{
 					while (conn.stream.DataAvailable == false)
 					{
-						if (frmServer.ShuttingDown)
+						if (frmServer.ShuttingDown || (System.DateTime.Now - lastRead) > System.TimeSpan.FromMilliseconds(MAX_READ_WAIT_TIME))
 							return;
 						Thread.Sleep(100);
 					}
 					headerBuffer[i] = (byte)conn.stream.ReadByte();
+					lastRead = System.DateTime.Now;
 				}
 
 				Network.Header head = Network.bytesToHeader(headerBuffer);
@@ -164,13 +188,15 @@ namespace Server
 
 				// Read in exactly the amount of data sent
 				byte[] data = new byte[head.Length];
+				lastRead = System.DateTime.Now;
 				for (int i = 0; i < head.Length; i++)
 				{
 					while (conn.stream.DataAvailable == false)
-					{if (frmServer.ShuttingDown)
+					{if (frmServer.ShuttingDown || (System.DateTime.Now - lastRead) > System.TimeSpan.FromMilliseconds(MAX_READ_WAIT_TIME))
 						 return;
 						Thread.Sleep(100);}
 					data[i] = (byte)conn.stream.ReadByte();
+					lastRead = System.DateTime.Now;
 				}
 
 				// We don't want to allow someone to do anything but log in until they are logged in
@@ -222,13 +248,31 @@ namespace Server
 							{ // Login failed
 								confirmHead.ToID = 0;
 								sendData(Network.headerToBytes(confirmHead), BitConverter.GetBytes(Network.LoginBad));
+								Shutdown();
 							}
 							break;
 						default:
 							break;
 					}
 				}
+
+				lastActivity = System.DateTime.Now;
 			}
+		}
+
+		/// <summary>
+		/// Sends the keepAlive signal to check if the network connection is still active
+		/// </summary>
+		private void sendKeepAlive()
+		{
+			Network.Header pingHead = new SDCSCommon.Network.Header();
+			pingHead.DataType = Network.DataTypes.Ping;
+			pingHead.Encrypted = false;
+			pingHead.FromID = -1;
+			pingHead.Length = 0;
+			pingHead.ToID = conn.userID;
+
+			sendData(Network.headerToBytes(pingHead));
 		}
 	}
 }

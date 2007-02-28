@@ -87,7 +87,11 @@ namespace SDCSCommon
 			/// <summary>
 			/// Sent from the client to request the directory info on another user
 			/// </summary>
-			DirectoryRequest
+			DirectoryRequest,
+			/// <summary>
+			/// Sent by the server or the client to determine if the network connection is still alive
+			/// </summary>
+			Ping
 		}
 
 		/// <summary>
