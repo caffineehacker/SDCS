@@ -200,7 +200,7 @@ namespace Server
 				}
 
 				// We don't want to allow someone to do anything but log in until they are logged in
-				if (loggedIn || head.DataType == Network.DataTypes.LoginInformation)
+				if ((loggedIn && head.DataType != Network.DataTypes.LoginInformation) || head.DataType == Network.DataTypes.LoginInformation || head.DataType == Network.DataTypes.Ping)
 				{
 					switch (head.DataType)
 					{
@@ -251,10 +251,15 @@ namespace Server
 								Shutdown();
 							}
 							break;
+						case Network.DataTypes.Logout:
+							Shutdown();
+							break;
 						default:
 							break;
 					}
 				}
+				else
+					Shutdown();
 
 				lastActivity = System.DateTime.Now;
 			}

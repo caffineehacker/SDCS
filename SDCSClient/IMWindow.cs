@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Client
 {
 	/// <summary>
-	/// Summary description for Form1.
+	/// This is the IM form. All simple text messaging is done from this form
 	/// </summary>
 	public class IMForm : System.Windows.Forms.Form
 	{
@@ -44,14 +44,16 @@ namespace Client
 			buddyData = bld;
 		}
 
+		/// <summary>
+		/// Call this function when a new IM is received from the user associted with this instance
+		/// </summary>
+		/// <param name="message"></param>
 		public void recIM(string message)
 		{
 			imHistBox.Text += buddyData.username + ": " + message + "\r\n";
 			this.Activate();
 
 		}
-
-
 
 		/// <summary>
 		/// Clean up any resources being used.
@@ -231,8 +233,14 @@ namespace Client
 		
 		}
 
+		/// <summary>
+		/// Handler for the KeyPress event emitted by imTypeBox. We handle this in order to detect return key presses.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void imTypeBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
 		{
+			// Return is key code 13
 			if(e.KeyChar == 13)
 				SendBtn_Click(sender, (System.EventArgs)e);
 		}

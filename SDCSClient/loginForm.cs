@@ -20,15 +20,18 @@ namespace Client
 		private System.Windows.Forms.Label PasswordLabel;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
-		private System.Windows.Forms.MenuItem menuItem2;
-		private System.Windows.Forms.MenuItem menuItem3;
-		private System.Windows.Forms.MenuItem menuItem4;
 		private System.Windows.Forms.StatusBar loginFormStatusBar;
+		private System.Windows.Forms.MenuItem ChooseServerMenuItem;
+		private System.Windows.Forms.MenuItem PreferencesMenuItem;
+		private System.Windows.Forms.MenuItem ExitMenuItem;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Standard constructor
+		/// </summary>
 		public LoginForm()
 		{
 			//
@@ -71,9 +74,9 @@ namespace Client
 			this.PasswordLabel = new System.Windows.Forms.Label();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.menuItem3 = new System.Windows.Forms.MenuItem();
-			this.menuItem4 = new System.Windows.Forms.MenuItem();
+			this.ChooseServerMenuItem = new System.Windows.Forms.MenuItem();
+			this.PreferencesMenuItem = new System.Windows.Forms.MenuItem();
+			this.ExitMenuItem = new System.Windows.Forms.MenuItem();
 			this.loginFormStatusBar = new System.Windows.Forms.StatusBar();
 			this.SuspendLayout();
 			// 
@@ -140,26 +143,26 @@ namespace Client
 			// 
 			this.menuItem1.Index = 0;
 			this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItem3,
-																					  this.menuItem4,
-																					  this.menuItem2});
+																					  this.ChooseServerMenuItem,
+																					  this.PreferencesMenuItem,
+																					  this.ExitMenuItem});
 			this.menuItem1.Text = "Options";
 			// 
-			// menuItem2
+			// ChooseServerMenuItem
 			// 
-			this.menuItem2.Index = 2;
-			this.menuItem2.Text = "Exit";
-			this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+			this.ChooseServerMenuItem.Index = 0;
+			this.ChooseServerMenuItem.Text = "Choose Server";
 			// 
-			// menuItem3
+			// PreferencesMenuItem
 			// 
-			this.menuItem3.Index = 0;
-			this.menuItem3.Text = "Choose Server";
+			this.PreferencesMenuItem.Index = 1;
+			this.PreferencesMenuItem.Text = "Preferences";
 			// 
-			// menuItem4
+			// ExitMenuItem
 			// 
-			this.menuItem4.Index = 1;
-			this.menuItem4.Text = "Preferences";
+			this.ExitMenuItem.Index = 2;
+			this.ExitMenuItem.Text = "Exit";
+			this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
 			// 
 			// loginFormStatusBar
 			// 
@@ -189,6 +192,11 @@ namespace Client
 		}
 		#endregion
 
+		/// <summary>
+		/// Handler for when the user clicks on the login button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void loginButton_Click(object sender, System.EventArgs e)
 		{
 			if(ClientNetwork.logInToServer(usernameTextBox.Text, passwordTextBox.Text))
@@ -197,12 +205,22 @@ namespace Client
 				this.DialogResult = DialogResult.Cancel;
 		}
 
+		/// <summary>
+		/// Handler for when the user clicks on the cancel button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void cancelButton_Click(object sender, System.EventArgs e)
 		{
 			this.DialogResult = DialogResult.Cancel;
 		}
 
-		private void menuItem2_Click(object sender, System.EventArgs e)
+		/// <summary>
+		/// Handler for when the user clicks on the Exit menu item
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void ExitMenuItem_Click(object sender, System.EventArgs e)
 		{
 			System.Windows.Forms.Application.Exit();
 		}

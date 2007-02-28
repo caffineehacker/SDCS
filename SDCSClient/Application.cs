@@ -3,12 +3,12 @@ using System;
 namespace Client
 {
 	/// <summary>
-	/// Summary description for Application.
+	/// This is the application class for the Client program.
 	/// </summary>
 	public class Application
 	{
 		/// <summary>
-		/// The main entry point for the application.
+		/// The main entry point for the client application.
 		/// </summary>
 		[STAThread]
 		static void Main() 

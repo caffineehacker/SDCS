@@ -91,7 +91,11 @@ namespace SDCSCommon
 			/// <summary>
 			/// Sent by the server or the client to determine if the network connection is still alive
 			/// </summary>
-			Ping
+			Ping,
+			/// <summary>
+			/// Sent by the client in order to cleanly log out
+			/// </summary>
+			Logout
 		}
 
 		/// <summary>

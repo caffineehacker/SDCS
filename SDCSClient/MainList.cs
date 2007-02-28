@@ -9,22 +9,22 @@ using SDCSCommon;
 namespace Client
 {
 	/// <summary>
-	/// Summary description for Form1.
+	/// This is the main form for the client application. This form is passed to Application.Run so when it exits the application exits.
 	/// </summary>
 	public class MainList : System.Windows.Forms.Form
 	{
-		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.ListBox lstBuddyList;
 		private System.Windows.Forms.MenuItem mnuFile;
 		private System.Windows.Forms.MenuItem mnuExit;
 		private System.Windows.Forms.MenuItem logoffMainListMenuOption;
+		private System.Windows.Forms.MainMenu mainMenu;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
 		/// <summary>
-		/// ToDo:
+		/// Standard Constructor
 		/// </summary>
 		public MainList()
 		{
@@ -66,7 +66,7 @@ namespace Client
 		private void InitializeComponent()
 		{
 			this.lstBuddyList = new System.Windows.Forms.ListBox();
-			this.mainMenu1 = new System.Windows.Forms.MainMenu();
+			this.mainMenu = new System.Windows.Forms.MainMenu();
 			this.mnuFile = new System.Windows.Forms.MenuItem();
 			this.logoffMainListMenuOption = new System.Windows.Forms.MenuItem();
 			this.mnuExit = new System.Windows.Forms.MenuItem();
@@ -81,10 +81,10 @@ namespace Client
 			this.lstBuddyList.TabIndex = 0;
 			this.lstBuddyList.DoubleClick += new System.EventHandler(this.lstBuddyList_DoubleClick);
 			// 
-			// mainMenu1
+			// mainMenu
 			// 
-			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.mnuFile});
+			this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.mnuFile});
 			// 
 			// mnuFile
 			// 
@@ -98,7 +98,7 @@ namespace Client
 			// 
 			this.logoffMainListMenuOption.Index = 0;
 			this.logoffMainListMenuOption.Text = "Logoff";
-			this.logoffMainListMenuOption.Click += new System.EventHandler(this.menuItem1_Click);
+			this.logoffMainListMenuOption.Click += new System.EventHandler(this.logoffMainListMenuOption_Click);
 			// 
 			// mnuExit
 			// 
@@ -111,7 +111,7 @@ namespace Client
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(232, 741);
 			this.Controls.Add(this.lstBuddyList);
-			this.Menu = this.mainMenu1;
+			this.Menu = this.mainMenu;
 			this.Name = "MainList";
 			this.Text = "People - SDCS";
 			this.Load += new System.EventHandler(this.MainList_Load);
@@ -120,6 +120,11 @@ namespace Client
 		}
 		#endregion
 
+		/// <summary>
+		/// Handler for when the user clicks on the Exit menu item
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void mnuExit_Click(object sender, System.EventArgs e)
 		{
 			System.Windows.Forms.Application.Exit();
@@ -171,6 +176,11 @@ namespace Client
 			}
 		}
 
+		/// <summary>
+		/// Handler for when the user double clicks on the buddy list
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void lstBuddyList_DoubleClick(object sender, System.EventArgs e)
 		{
 			if ( lstBuddyList.SelectedItem != null )
@@ -198,17 +208,19 @@ namespace Client
 				((IMForm)bld.Tag).Activate();
 		}
 
-		private void menuItem1_Click(object sender, System.EventArgs e)
-		{
-			ClientNetwork.Disconnect();
-			showLogin();
-		}
-
+		/// <summary>
+		/// Handler for the load event
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainList_Load(object sender, System.EventArgs e)
 		{
 			showLogin();
 		}
 
+		/// <summary>
+		/// Shows the login window
+		/// </summary>
 		private void showLogin()
 		{
 			this.Hide();
@@ -218,6 +230,17 @@ namespace Client
 				this.Dispose();
 			else
 				this.Show();
+		}
+
+		/// <summary>
+		/// Called when the user clicks on the log off menu option
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void logoffMainListMenuOption_Click(object sender, System.EventArgs e)
+		{
+			ClientNetwork.Disconnect();
+			showLogin();
 		}
 	}
 }
