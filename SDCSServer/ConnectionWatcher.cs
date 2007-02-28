@@ -231,8 +231,18 @@ namespace Server
 							// the client.
 							if (CryptoFunctions.getMD5Hash(String.Concat(ServerDatabase.getUserPass(username), System.Text.UnicodeEncoding.Unicode.GetString(randomCode))) == password)
 							{ // Login successful
+								
 								conn.userID = ServerDatabase.getUserID(username);
 								conn.username = username;
+
+								// Make sure we are only logged in from one place at a time
+								lock (ServerNetwork.netStreams)
+								{
+									for (int i = ServerNetwork.netStreams.Count - 1; i >= 0; i--)
+										if (((ServerNetwork.connection)ServerNetwork.netStreams[i]).userID == conn.userID && ((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.loggedIn)
+											((ServerNetwork.connection)ServerNetwork.netStreams[i]).watchingClass.Shutdown();
+								}
+
 								confirmHead.ToID = conn.userID;
 
 								// Send the Login OK message to let the client know they're authenticated
