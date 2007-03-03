@@ -81,6 +81,18 @@ namespace Server
 			{}
 
 			DatabaseLoaded = true;
+
+			foreach (UserDatabase.UserDataRow dat in database.UserData.Rows)
+			{
+				SDCSCommon.Network.BuddyListData bld = new SDCSCommon.Network.BuddyListData();
+				bld.userID = dat.UserID;
+				bld.username = dat.Username;
+				bld.userState = SDCSCommon.Network.UserState.Offline;
+
+				lock (ServerNetwork.buddyStates.SyncRoot)
+					ServerNetwork.buddyStates.Add(dat.UserID, bld);
+			}
+
 			return true;
 		}
 

@@ -39,6 +39,11 @@ namespace Server
 		}
 
 		/// <summary>
+		/// Keeps track of the state of all users. ToDo: Change to a non-linked list dictionary
+		/// </summary>
+		public static System.Collections.Specialized.ListDictionary buddyStates = new System.Collections.Specialized.ListDictionary();
+
+		/// <summary>
 		/// This arrayList holds data for all the active connections
 		/// </summary>
 		public static ArrayList netStreams = new ArrayList();
@@ -149,6 +154,12 @@ namespace Server
 			bld.username = username;
 			bld.userState = state;
 
+			lock (buddyStates.SyncRoot)
+			{
+				if (buddyStates.Contains(userID))
+					buddyStates.Remove(userID);
+				buddyStates.Add(userID, bld);
+			}
 			lock (netStreams.SyncRoot)
 				for (int i = 0; i < netStreams.Count; i++)
 				{
@@ -165,19 +176,10 @@ namespace Server
 		/// <param name="con">The connection this data should be sent to</param>
 		public static void refreshBuddyList(connection con)
 		{
-			lock (netStreams.SyncRoot)
-				foreach (connection budCon in netStreams)
-				{
-					SDCSCommon.Network.BuddyListData bld = new SDCSCommon.Network.BuddyListData();
-					bld.userID = budCon.userID;
-					bld.username = budCon.username;
-					bld.userState = budCon.userState;
-
+			lock (buddyStates.SyncRoot)
+				foreach (SDCSCommon.Network.BuddyListData bld in buddyStates.Values)
 					lock (con.watchingClass.BuddyListData.SyncRoot)
-					{
 						con.watchingClass.BuddyListData.Add(bld);
-					}
-				}
 		}
 	}
 }
