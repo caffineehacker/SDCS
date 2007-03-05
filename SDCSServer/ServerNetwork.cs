@@ -160,14 +160,11 @@ namespace Server
 					buddyStates.Remove(userID);
 				buddyStates.Add(userID, bld);
 			}
+
 			lock (netStreams.SyncRoot)
 				for (int i = 0; i < netStreams.Count; i++)
-				{
 					lock (((connection)netStreams[i]).watchingClass.BuddyListData.SyncRoot)
-					{
 						((connection)netStreams[i]).watchingClass.BuddyListData.Add(bld);
-					}
-				}
 		}
 
 		/// <summary>
