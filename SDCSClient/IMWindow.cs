@@ -11,6 +11,8 @@ namespace Client
 	/// </summary>
 	public class IMForm : System.Windows.Forms.Form
 	{
+		private string time;
+		private bool stamp = false;
 		private SDCSCommon.Network.BuddyListData buddyData;
 		private System.Windows.Forms.Button SendBtn;
 		private System.Windows.Forms.TextBox imHistBox;
@@ -50,7 +52,8 @@ namespace Client
 		/// <param name="message"></param>
 		public void recIM(string message)
 		{
-			imHistBox.Text += buddyData.username + ": " + message + "\r\n";
+			updateTime();
+			imHistBox.Text += time + buddyData.username + ": " + message + "\r\n";//add time in
 			this.Activate();
 
 		}
@@ -169,7 +172,7 @@ namespace Client
 			// 
 			this.timestamp.Index = 0;
 			this.timestamp.RadioCheck = true;
-			this.timestamp.Text = "Timestamp (on/off)";
+			this.timestamp.Text = "Timestamp OFF";
 			this.timestamp.Click += new System.EventHandler(this.timestamp_Click);
 			// 
 			// menuItem4
@@ -211,8 +214,9 @@ namespace Client
 		/// <param name="e"></param>
 		private void SendBtn_Click(object sender, System.EventArgs e)
 		{
+			updateTime();
 			ClientNetwork.SendIM(buddyData.userID, imTypeBox.Text);
-			imHistBox.Text += ClientNetwork.Username + ": " + imTypeBox.Text + "\r\n";
+			imHistBox.Text += time + ClientNetwork.Username + ": " + imTypeBox.Text + "\r\n";
 
 			imTypeBox.Text = "";
 
@@ -230,7 +234,12 @@ namespace Client
 
 		private void timestamp_Click(object sender, System.EventArgs e)
 		{
-		
+			stamp = !stamp;
+
+			if(stamp)
+                timestamp.Text = "Timestamp ON";
+			else
+				timestamp.Text = "Timestamp OFF";
 		}
 
 		/// <summary>
@@ -243,6 +252,24 @@ namespace Client
 			// Return is key code 13
 			if(e.KeyChar == 13)
 				SendBtn_Click(sender, (System.EventArgs)e);
+		}
+
+		/// <summary>
+		/// Updates the time variable
+		/// </summary>
+		private void updateTime()
+		{	
+			if(stamp)
+			{
+				string hour = System.DateTime.Now.Hour.ToString();
+				string minute = System.DateTime.Now.Minute.ToString();
+				string second = System.DateTime.Now.Second.ToString();
+				time = "(" + hour + ":" + minute + ":" + second + ") ";
+			}
+			else
+			{
+				time = "";
+			}
 		}
 	}
 }
