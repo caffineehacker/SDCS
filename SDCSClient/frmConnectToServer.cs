@@ -154,7 +154,7 @@ namespace Client
 			ClientNetwork.Port = (int)numPort.Value;
 			if (!(ClientNetwork.logInToServer(txtUsername.Text, txtPassword.Text)))
 				MessageBox.Show("Login Failed");
-			this.Dispose();
+            DialogResult = System.Windows.Forms.DialogResult.OK;
 		}
 	}
 }

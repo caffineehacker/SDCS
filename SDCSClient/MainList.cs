@@ -239,7 +239,8 @@ namespace Client
 		{
 			this.Hide();
 			ClientNetwork.DataReceived += new Client.ClientNetwork.DataReceivedDelegate(ClientNetwork_DataReceived);
-			LoginForm initialLogin = new LoginForm();
+			//LoginForm initialLogin = new LoginForm();
+            frmConnectToServer initialLogin = new frmConnectToServer();
 			if (initialLogin.ShowDialog() != DialogResult.OK)
 				this.Dispose();
 			else
